@@ -19,6 +19,7 @@ struct DashboardView: View {
                 }
 
                 todaySection
+                weekSection
                 medicalNotice
             }
             .padding(.horizontal, 16)
@@ -110,6 +111,50 @@ struct DashboardView: View {
                     tint: .indigo
                 )
             }
+        }
+    }
+
+    private var weekSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Wochenübersicht")
+                .font(.headline)
+
+            NavigationLink {
+                WeekOverviewView(
+                    content: WeekOverviewContent(days: content.week)
+                )
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "chart.bar.fill")
+                        .font(.title3)
+                        .foregroundStyle(.tint)
+                        .frame(width: 32)
+                        .accessibilityHidden(true)
+
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Letzte sieben Tage")
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+
+                        Text(
+                            "\(content.workouts.count) Trainingseinheiten"
+                        )
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.tertiary)
+                        .accessibilityHidden(true)
+                }
+                .padding(14)
+                .background(Color(.secondarySystemGroupedBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .buttonStyle(.plain)
         }
     }
 
