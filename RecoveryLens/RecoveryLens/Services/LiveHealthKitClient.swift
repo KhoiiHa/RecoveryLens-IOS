@@ -222,31 +222,38 @@ struct LiveHealthKitClient: HealthKitClient {
         let samples = try await descriptor.result(for: healthStore)
 
         return samples.compactMap { sample in
-            guard let state = sleepState(for: sample.value) else {
+            guard let state = Self.sleepState(for: sample.value) else {
                 return nil
             }
 
             return SleepSample(
                 startDate: sample.startDate,
                 endDate: sample.endDate,
-                state: state
+                state: state,
+                sourceIdentifier: sample.sourceRevision.source.bundleIdentifier
             )
         }
     }
 
-    private func sleepState(for rawValue: Int) -> SleepState? {
+    static func sleepState(for rawValue: Int) -> SleepState? {
         guard let value = HKCategoryValueSleepAnalysis(rawValue: rawValue) else {
             return nil
         }
 
-        if HKCategoryValueSleepAnalysis.allAsleepValues.contains(value) {
-            return .asleep
+        switch value {
+        case .asleepUnspecified:
+            return SleepState.asleepUnspecified
+        case .asleepCore:
+            return SleepState.asleepCore
+        case .asleepDeep:
+            return SleepState.asleepDeep
+        case .asleepREM:
+            return SleepState.asleepREM
+        case .awake:
+            return SleepState.awake
+        default:
+            return nil
         }
-        if value == .awake {
-            return .awake
-        }
-
-        return nil
     }
 
     private func workouts(

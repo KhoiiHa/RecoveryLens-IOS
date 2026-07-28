@@ -112,6 +112,13 @@ struct InfoView: View {
             )
 
             InfoRow(
+                title: "Schlafdauer",
+                detail: "Gezählt werden nur von Apple Health als Schlaf markierte Zeiträume. Überlappungen verschiedener Quellen werden nicht doppelt gezählt; Bett- und Wachzeiten zählen nicht als Schlaf.",
+                systemImage: "bed.double.fill",
+                tint: .indigo
+            )
+
+            InfoRow(
                 title: "Begrenzter Zeitraum",
                 detail: "Das MVP betrachtet ausschließlich die letzten sieben Kalendertage einschließlich heute.",
                 systemImage: "calendar",

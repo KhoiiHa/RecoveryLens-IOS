@@ -6,14 +6,39 @@ struct QuantitySample: Equatable, Sendable {
 }
 
 enum SleepState: Equatable, Sendable {
-    case asleep
+    case asleepUnspecified
+    case asleepCore
+    case asleepDeep
+    case asleepREM
     case awake
+
+    var isAsleep: Bool {
+        switch self {
+        case .asleepUnspecified, .asleepCore, .asleepDeep, .asleepREM:
+            true
+        case .awake:
+            false
+        }
+    }
 }
 
 struct SleepSample: Equatable, Sendable {
     let startDate: Date
     let endDate: Date
     let state: SleepState
+    let sourceIdentifier: String
+
+    init(
+        startDate: Date,
+        endDate: Date,
+        state: SleepState,
+        sourceIdentifier: String = "unknown"
+    ) {
+        self.startDate = startDate
+        self.endDate = endDate
+        self.state = state
+        self.sourceIdentifier = sourceIdentifier
+    }
 }
 
 struct HealthDataSnapshot: Equatable, Sendable {

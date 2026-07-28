@@ -121,6 +121,40 @@ struct HealthKitClientTests {
         )
     }
 
+    @Test
+    func sleepCategoriesAreMappedWithoutTreatingInBedAsSleep() {
+        #expect(
+            LiveHealthKitClient.sleepState(
+                for: HKCategoryValueSleepAnalysis.asleepUnspecified.rawValue
+            ) == .asleepUnspecified
+        )
+        #expect(
+            LiveHealthKitClient.sleepState(
+                for: HKCategoryValueSleepAnalysis.asleepCore.rawValue
+            ) == .asleepCore
+        )
+        #expect(
+            LiveHealthKitClient.sleepState(
+                for: HKCategoryValueSleepAnalysis.asleepDeep.rawValue
+            ) == .asleepDeep
+        )
+        #expect(
+            LiveHealthKitClient.sleepState(
+                for: HKCategoryValueSleepAnalysis.asleepREM.rawValue
+            ) == .asleepREM
+        )
+        #expect(
+            LiveHealthKitClient.sleepState(
+                for: HKCategoryValueSleepAnalysis.awake.rawValue
+            ) == .awake
+        )
+        #expect(
+            LiveHealthKitClient.sleepState(
+                for: HKCategoryValueSleepAnalysis.inBed.rawValue
+            ) == nil
+        )
+    }
+
     private func expectError(
         _ expectedError: HealthKitClientError,
         operation: () async throws -> Void

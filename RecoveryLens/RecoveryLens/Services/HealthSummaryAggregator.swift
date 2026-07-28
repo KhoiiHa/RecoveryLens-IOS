@@ -70,7 +70,7 @@ struct HealthSummaryAggregator {
     ) -> Int? {
         let asleepIntervals = mergedIntervals(
             samples
-                .filter { $0.state == .asleep }
+                .filter { $0.state.isAsleep }
                 .compactMap { clippedInterval(for: $0, from: dayStart, to: dayEnd) }
         )
 

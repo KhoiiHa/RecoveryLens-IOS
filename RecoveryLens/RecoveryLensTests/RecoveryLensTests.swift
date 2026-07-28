@@ -104,7 +104,7 @@ struct RecoveryLensTests {
     }
 
     @Test
-    func overlappingSleepIsCountedOnceAndAwakeTimeIsExcluded() throws {
+    func overlappingSleepFromMultipleSourcesIsCountedOnce() throws {
         let snapshot = HealthDataSnapshot(
             stepSamples: [],
             activeEnergySamples: [],
@@ -112,12 +112,14 @@ struct RecoveryLensTests {
                 SleepSample(
                     startDate: try date(year: 2026, month: 7, day: 28),
                     endDate: try date(year: 2026, month: 7, day: 28, hour: 4),
-                    state: .asleep
+                    state: .asleepCore,
+                    sourceIdentifier: "com.example.watch"
                 ),
                 SleepSample(
                     startDate: try date(year: 2026, month: 7, day: 28, hour: 3),
                     endDate: try date(year: 2026, month: 7, day: 28, hour: 6),
-                    state: .asleep
+                    state: .asleepUnspecified,
+                    sourceIdentifier: "com.example.sleep-app"
                 ),
                 SleepSample(
                     startDate: try date(
@@ -134,7 +136,8 @@ struct RecoveryLensTests {
                         hour: 4,
                         minute: 40
                     ),
-                    state: .awake
+                    state: .awake,
+                    sourceIdentifier: "com.example.watch"
                 )
             ],
             workouts: []
@@ -157,7 +160,7 @@ struct RecoveryLensTests {
                 SleepSample(
                     startDate: try date(year: 2026, month: 7, day: 27, hour: 23),
                     endDate: try date(year: 2026, month: 7, day: 28, hour: 7),
-                    state: .asleep
+                    state: .asleepREM
                 )
             ],
             workouts: []
@@ -170,6 +173,49 @@ struct RecoveryLensTests {
 
         #expect(summaries[summaries.count - 2].sleepMinutes == 60)
         #expect(summaries.last?.sleepMinutes == 420)
+    }
+
+    @Test
+    func everySupportedSleepStageContributesToDuration() throws {
+        let start = try date(year: 2026, month: 7, day: 28)
+        let states: [SleepState] = [
+            .asleepUnspecified,
+            .asleepCore,
+            .asleepDeep,
+            .asleepREM,
+        ]
+        let sleepSamples = try states.enumerated().map { index, state in
+            SleepSample(
+                startDate: try #require(
+                    calendar.date(
+                        byAdding: .hour,
+                        value: index,
+                        to: start
+                    )
+                ),
+                endDate: try #require(
+                    calendar.date(
+                        byAdding: .hour,
+                        value: index + 1,
+                        to: start
+                    )
+                ),
+                state: state
+            )
+        }
+        let snapshot = HealthDataSnapshot(
+            stepSamples: [],
+            activeEnergySamples: [],
+            sleepSamples: sleepSamples,
+            workouts: []
+        )
+
+        let summaries = HealthSummaryAggregator(calendar: calendar).summaries(
+            from: snapshot,
+            endingAt: try date(year: 2026, month: 7, day: 28, hour: 12)
+        )
+
+        #expect(summaries.last?.sleepMinutes == 240)
     }
 
     @Test

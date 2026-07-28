@@ -42,7 +42,17 @@ Zustände.
 ### Reine Aggregationslogik
 
 Die sieben Tage werden mit injizierbarem Kalender und Referenzdatum gebildet.
-Schlafintervalle werden vereinigt, damit Überlappungen nicht doppelt zählen.
+Bei Schlaf zählen nur die HealthKit-Zustände `asleepUnspecified`,
+`asleepCore`, `asleepDeep` und `asleepREM`; `inBed` und `awake` werden nicht
+als Schlafdauer behandelt. Schlafintervalle werden vereinigt und
+überlappende Wachintervalle abgezogen.
+
+Mehrere Apps oder Geräte können dieselben Zeiträume liefern. Da HealthKit
+keine allgemeine Qualitätsrangfolge für Quellen vorgibt, erfindet RecoveryLens
+keine geräte- oder herstellerspezifische Priorität. Stattdessen werden
+Intervalle quellenneutral als Zeitunion zusammengeführt. So entstehen keine
+Doppelzählungen und die App behauptet keine nicht belegbare Messqualität.
+
 Trainingseinheiten werden anhand ihres Startdatums einem lokalen Kalendertag
 zugeordnet. Diese Regeln liegen außerhalb der Views und sind mit
 deterministischen Daten getestet.

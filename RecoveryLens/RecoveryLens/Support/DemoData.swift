@@ -81,7 +81,8 @@ enum DemoData {
             return SleepSample(
                 startDate: end.addingTimeInterval(TimeInterval(-duration * 60)),
                 endDate: end,
-                state: .asleep
+                state: .asleepUnspecified,
+                sourceIdentifier: "RecoveryLens Demo"
             )
         }
     }

@@ -163,10 +163,15 @@ und dürfen nicht automatisch als Null interpretiert werden.
 - Schritte und aktive Energie werden pro Kalendertag summiert.
 - Trainingseinheiten werden nach ihrem Startdatum einem Tag zugeordnet.
 - Schlaf wird aus relevanten Schlaf-Samples aufbereitet.
+- Als Schlaf zählen `asleepUnspecified`, `asleepCore`, `asleepDeep` und
+  `asleepREM`; `inBed` und `awake` zählen nicht als Schlaf.
 - Überlappende Schlafintervalle dürfen nicht doppelt gezählt werden.
-- Wachphasen zählen nicht zur Schlafdauer.
-- Quellenpriorisierung und genaue Schlafkategorien werden vor dem
-  HealthKit-Block anhand aktueller Apple-Dokumentation festgelegt und getestet.
+- Überlappende Wachphasen werden von der Schlafzeit abgezogen.
+- Quellen werden nicht nach einer vermeintlichen Messqualität priorisiert, weil
+  HealthKit dafür keine allgemeine Rangfolge bereitstellt. Stattdessen werden
+  Schlafintervalle aller freigegebenen Quellen als Zeitunion zusammengeführt.
+- Die Quellenkennung bleibt am internen Sample erhalten, Health-Daten werden
+  weiterhin weder persistiert noch an die Oberfläche weitergegeben.
 - Kalender- und Zeitzonenabhängigkeiten müssen injizierbar oder anderweitig
   deterministisch testbar sein.
 

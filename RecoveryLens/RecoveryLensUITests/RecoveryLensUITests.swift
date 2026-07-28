@@ -53,6 +53,10 @@ final class RecoveryLensUITests: XCTestCase {
         XCTAssertTrue(
             app.staticTexts["Fachliche Grenzen"].waitForExistence(timeout: 3)
         )
+
+        let sleepBoundary = app.staticTexts["Schlafdauer"]
+        scrollUntilHittable(sleepBoundary, in: app)
+        XCTAssertTrue(sleepBoundary.isHittable)
     }
 
     @MainActor

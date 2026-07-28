@@ -63,6 +63,12 @@ keine Risikoeinschätzung und keine konkrete Schlaf-, Trainings- oder
 Gesundheitsempfehlung. Der betrachtete Zeitraum endet nach sieben
 Kalendertagen einschließlich heute.
 
+Für die Schlafdauer zählen ausschließlich die von HealthKit als Schlaf
+klassifizierten Zustände. Bett- und Wachzeiten werden nicht als Schlaf
+gerechnet. Überlappende Intervalle mehrerer Quellen werden zeitlich
+zusammengeführt, ohne einzelne Apps oder Geräte als vermeintlich bessere Quelle
+einzustufen.
+
 Weitere Entscheidungen und Trade-offs stehen in der
 [Case Study](docs/CASE_STUDY.md).
 
