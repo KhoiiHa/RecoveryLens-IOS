@@ -1,38 +1,58 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var viewModel: DashboardViewModel
+    @State private var dashboardViewModel: DashboardViewModel
+    @State private var checkInViewModel: CheckInViewModel
 
     init(
         healthKitClient: any HealthKitClient,
+        checkInService: any CheckInService,
         calendar: Calendar = .current,
         now: @escaping () -> Date = Date.init
     ) {
-        _viewModel = State(
+        _dashboardViewModel = State(
             initialValue: DashboardViewModel(
                 healthKitClient: healthKitClient,
                 calendar: calendar,
                 now: now
             )
         )
+        _checkInViewModel = State(
+            initialValue: CheckInViewModel(
+                checkInService: checkInService,
+                date: now()
+            )
+        )
     }
 
     var body: some View {
-        NavigationStack {
-            content
-        }
-        .task {
-            guard case .idle = viewModel.state else {
-                return
+        TabView {
+            NavigationStack {
+                dashboardContent
+            }
+            .tabItem {
+                Label("Übersicht", systemImage: "chart.bar.fill")
+            }
+            .task {
+                guard case .idle = dashboardViewModel.state else {
+                    return
+                }
+
+                await dashboardViewModel.load()
             }
 
-            await viewModel.load()
+            NavigationStack {
+                CheckInView(viewModel: checkInViewModel)
+            }
+            .tabItem {
+                Label("Check-in", systemImage: "checkmark.circle.fill")
+            }
         }
     }
 
     @ViewBuilder
-    private var content: some View {
-        switch viewModel.state {
+    private var dashboardContent: some View {
+        switch dashboardViewModel.state {
         case .idle, .loading:
             loadingView
         case .healthKitUnavailable:
@@ -44,7 +64,7 @@ struct ContentView: View {
             )
         case .authorizationRequired:
             HealthAuthorizationView {
-                await viewModel.requestAuthorization()
+                await dashboardViewModel.requestAuthorization()
             }
         case .authorizationUnknown:
             statusView(
@@ -64,13 +84,13 @@ struct ContentView: View {
             DashboardView(
                 content: content,
                 showsMissingDataNotice: true,
-                onRefresh: viewModel.load
+                onRefresh: dashboardViewModel.load
             )
         case let .loaded(content):
             DashboardView(
                 content: content,
                 showsMissingDataNotice: false,
-                onRefresh: viewModel.load
+                onRefresh: dashboardViewModel.load
             )
         case let .failed(error):
             statusView(
@@ -108,7 +128,7 @@ struct ContentView: View {
         } actions: {
             Button(actionTitle) {
                 Task {
-                    await viewModel.load()
+                    await dashboardViewModel.load()
                 }
             }
             .buttonStyle(.borderedProminent)
@@ -116,11 +136,13 @@ struct ContentView: View {
     }
 }
 
+#if DEBUG
 #Preview("Berechtigung") {
     ContentView(
         healthKitClient: MockHealthKitClient(
             authorizationStateResult: .success(.shouldRequest)
-        )
+        ),
+        checkInService: PreviewCheckInService()
     )
 }
 
@@ -128,6 +150,8 @@ struct ContentView: View {
     ContentView(
         healthKitClient: MockHealthKitClient(
             snapshotResult: .success(DemoData.snapshot)
-        )
+        ),
+        checkInService: PreviewCheckInService()
     )
 }
+#endif
