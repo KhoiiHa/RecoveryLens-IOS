@@ -56,6 +56,11 @@ Werbung und keine Drittanbieter-SDKs. Apple teilt Apps nicht zuverlässig mit,
 ob Lesezugriff verweigert wurde. Ein leeres Ergebnis wird deshalb nicht als
 explizite Ablehnung interpretiert.
 
+Die vollständige [Datenschutzerklärung](PRIVACY.md) ist öffentlich erreichbar
+und in der Infoansicht der App verlinkt. Das gebündelte Privacy Manifest
+deklariert entsprechend der aktuellen Implementierung kein Tracking, keine
+Off-Device-Datenerhebung und keine direkt verwendeten Required-Reason-APIs.
+
 ## Fachliche Grenzen
 
 RecoveryLens bewertet Werte nicht als gut, schlecht, gesund, erholt oder

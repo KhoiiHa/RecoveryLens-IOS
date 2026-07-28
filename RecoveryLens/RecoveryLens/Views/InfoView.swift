@@ -8,6 +8,7 @@ struct InfoView: View {
             storageAndTransfer
             permissions
             boundaries
+            privacyPolicy
         }
         .navigationTitle("Info & Datenschutz")
         .navigationBarTitleDisplayMode(.inline)
@@ -124,6 +125,22 @@ struct InfoView: View {
                 systemImage: "calendar",
                 tint: .teal
             )
+        }
+    }
+
+    private var privacyPolicy: some View {
+        Section("Datenschutzerklärung") {
+            Link(
+                destination: URL(
+                    string: "https://github.com/KhoiiHa/RecoveryLens-IOS/blob/main/PRIVACY.md"
+                )!
+            ) {
+                Label(
+                    "Datenschutzerklärung öffnen",
+                    systemImage: "doc.text"
+                )
+            }
+            .accessibilityIdentifier("privacy-policy-link")
         }
     }
 }

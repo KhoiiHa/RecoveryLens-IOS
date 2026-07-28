@@ -206,6 +206,10 @@ beobachtbare Zustände.
 - Purpose Strings benennen Zweck und Umfang in verständlicher Sprache.
 - Logs dürfen keine sensiblen Gesundheitswerte oder Check-in-Notizen enthalten.
 - Demo-Daten sind synthetisch und eindeutig als Demo-Daten erkennbar.
+- Eine öffentlich erreichbare Datenschutzerklärung ist im Repository gepflegt
+  und aus der Infoansicht verlinkt.
+- Das gebündelte Privacy Manifest muss Tracking, Off-Device-Datenerhebung und
+  direkt verwendete Required-Reason-APIs wahrheitsgemäß abbilden.
 
 Vor einer späteren Widget-Implementierung wird erneut geprüft, welche
 HealthKit-Daten eine Extension aktuell und zuverlässig lesen darf. Falls nötig,

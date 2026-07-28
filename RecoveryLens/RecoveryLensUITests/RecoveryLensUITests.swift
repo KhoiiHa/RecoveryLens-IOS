@@ -57,6 +57,12 @@ final class RecoveryLensUITests: XCTestCase {
         let sleepBoundary = app.staticTexts["Schlafdauer"]
         scrollUntilHittable(sleepBoundary, in: app)
         XCTAssertTrue(sleepBoundary.isHittable)
+
+        let privacyPolicyLink = app.descendants(matching: .any)[
+            "privacy-policy-link"
+        ]
+        scrollUntilHittable(privacyPolicyLink, in: app)
+        XCTAssertTrue(privacyPolicyLink.isHittable)
     }
 
     @MainActor

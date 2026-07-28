@@ -75,6 +75,12 @@ Analytik, keine Werbung und keine Drittanbieter-SDKs. Berechtigungen sind
 freiwillig und pro Datenart wählbar. Der manuelle Check-in bleibt auch ohne
 HealthKit-Zugriff nutzbar.
 
+Eine öffentlich erreichbare Datenschutzerklärung beschreibt Datenflüsse,
+lokale Speicherung und Löschung. Sie ist direkt aus der Infoansicht erreichbar.
+Das Privacy Manifest ist bewusst nicht mit Health- oder Check-in-Daten
+befüllt: Apples Definition von Erhebung setzt eine Übertragung vom Gerät
+voraus, die RecoveryLens nicht durchführt.
+
 Die App erstellt keine Diagnose, Risikoeinschätzung oder konkrete
 Gesundheitsempfehlung. Messwerte werden nicht als gesund, ungesund, erholt
 oder überlastet interpretiert. Diese Grenze ist im Einstieg, Dashboard und in
