@@ -47,6 +47,13 @@ struct ContentView: View {
             .tabItem {
                 Label("Check-in", systemImage: "checkmark.circle.fill")
             }
+
+            NavigationStack {
+                InfoView()
+            }
+            .tabItem {
+                Label("Info", systemImage: "info.circle.fill")
+            }
         }
     }
 

@@ -1,43 +1,114 @@
-//
-//  RecoveryLensUITests.swift
-//  RecoveryLensUITests
-//
-//  Created by Vu Minh Khoi Ha on 28.07.26.
-//
-
 import XCTest
 
 final class RecoveryLensUITests: XCTestCase {
-
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
     @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
+    func testAuthorizationExplainsVoluntaryAccessAndCheckInStaysAvailable() {
+        let app = launch(with: "-authorizationRequired")
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // XCUIAutomation Documentation
-        // https://developer.apple.com/documentation/xcuiautomation
+        XCTAssertTrue(
+            app.buttons["Mit Apple Health verbinden"]
+                .waitForExistence(timeout: 3)
+        )
+        let voluntaryAccessText = app.staticTexts.matching(
+            NSPredicate(
+                format: "label BEGINSWITH %@",
+                "Die Freigabe ist freiwillig"
+            )
+        ).firstMatch
+        XCTAssertTrue(voluntaryAccessText.exists)
+
+        app.tabBars.buttons["Check-in"].tap()
+
+        XCTAssertTrue(
+            app.navigationBars["Tages-Check-in"]
+                .waitForExistence(timeout: 3)
+        )
     }
 
     @MainActor
-    func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
+    func testInfoScreenExplainsPrivacyAndBoundaries() {
+        let app = launch(with: "-demoData")
+
+        app.tabBars.buttons["Info"].tap()
+
+        XCTAssertTrue(
+            app.navigationBars["Info & Datenschutz"]
+                .waitForExistence(timeout: 3)
+        )
+        XCTAssertTrue(app.staticTexts["Datenquellen"].exists)
+        XCTAssertTrue(app.staticTexts["Speicherung und Weitergabe"].exists)
+
+        app.swipeUp()
+
+        XCTAssertTrue(
+            app.staticTexts["Berechtigungen"].waitForExistence(timeout: 3)
+        )
+
+        app.swipeUp()
+
+        XCTAssertTrue(
+            app.staticTexts["Fachliche Grenzen"].waitForExistence(timeout: 3)
+        )
+    }
+
+    @MainActor
+    func testDashboardStatusScenarios() {
+        let scenarios = [
+            ("-healthKitUnavailable", "Apple Health nicht verfügbar"),
+            ("-authorizationUnknown", "Status nicht bestimmbar"),
+            ("-loading", "Health-Daten werden geladen"),
+            ("-emptyData", "Keine Health-Daten"),
+            ("-queryError", "Daten konnten nicht geladen werden"),
+        ]
+
+        for (argument, expectedTitle) in scenarios {
+            let app = launch(with: argument)
+
+            XCTAssertTrue(
+                app.staticTexts[expectedTitle]
+                    .waitForExistence(timeout: 3),
+                "\(expectedTitle) wurde nicht dargestellt."
+            )
+
+            app.terminate()
         }
+    }
+
+    @MainActor
+    func testPartialDataKeepsMissingValuesVisible() {
+        let app = launch(with: "-partialData")
+
+        XCTAssertTrue(
+            app.staticTexts[
+                "Einige Werte fehlen. RecoveryLens behandelt fehlende Daten nicht als gemessene Null."
+            ].waitForExistence(timeout: 3)
+        )
+        XCTAssertTrue(app.staticTexts["Schritte, 3.250"].exists)
+        XCTAssertTrue(app.staticTexts["Aktive Energie, –, Keine Daten"].exists)
+    }
+
+    @MainActor
+    func testDemoDataShowsDashboardContent() {
+        let app = launch(with: "-demoData")
+
+        XCTAssertTrue(
+            app.staticTexts["Tageswerte"].waitForExistence(timeout: 3)
+        )
+        XCTAssertTrue(app.staticTexts["Schritte, 8.840"].exists)
+        XCTAssertTrue(
+            app.buttons["Letzte sieben Tage, 3 Trainingseinheiten"].exists
+        )
+    }
+
+    @MainActor
+    private func launch(with argument: String) -> XCUIApplication {
+        let app = XCUIApplication()
+        app.launchArguments = [argument]
+        app.launch()
+        return app
     }
 }

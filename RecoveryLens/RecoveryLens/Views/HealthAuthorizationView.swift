@@ -26,8 +26,6 @@ struct HealthAuthorizationView: View {
                 .accessibilityHint(
                     "Öffnet die Apple-Health-Berechtigungsabfrage"
                 )
-
-                medicalNotice
             }
             .frame(maxWidth: 560)
             .padding(.horizontal, 24)
@@ -48,7 +46,7 @@ struct HealthAuthorizationView: View {
                 .font(.largeTitle.bold())
 
             Text(
-                "Betrachte deine letzten Tage anhand weniger verständlicher Werte aus Apple Health."
+                "Betrachte deine letzten Tage anhand weniger verständlicher Werte aus Apple Health. RecoveryLens gibt keine medizinische Bewertung oder Gesundheitsempfehlung."
             )
             .font(.title3)
             .foregroundStyle(.secondary)
@@ -87,7 +85,7 @@ struct HealthAuthorizationView: View {
     private var privacyNotice: some View {
         Label {
             Text(
-                "Health-Daten bleiben in Apple Health und werden von RecoveryLens nicht dauerhaft gespeichert oder übertragen."
+                "Die Freigabe ist freiwillig und später in Apple Health oder den Systemeinstellungen änderbar. Health-Daten werden nicht dauerhaft gespeichert oder übertragen."
             )
             .fixedSize(horizontal: false, vertical: true)
         } icon: {
@@ -95,19 +93,6 @@ struct HealthAuthorizationView: View {
                 .foregroundStyle(.green)
         }
         .font(.subheadline)
-        .foregroundStyle(.secondary)
-    }
-
-    private var medicalNotice: some View {
-        Label {
-            Text(
-                "RecoveryLens stellt Daten dar, gibt aber keine medizinische Bewertung oder Gesundheitsempfehlung."
-            )
-            .fixedSize(horizontal: false, vertical: true)
-        } icon: {
-            Image(systemName: "info.circle")
-        }
-        .font(.footnote)
         .foregroundStyle(.secondary)
     }
 

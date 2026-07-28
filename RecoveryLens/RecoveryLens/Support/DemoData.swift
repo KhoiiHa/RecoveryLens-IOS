@@ -48,6 +48,15 @@ enum DemoData {
         ]
     )
 
+    static let partialSnapshot = HealthDataSnapshot(
+        stepSamples: [
+            QuantitySample(date: referenceDate, value: 3_250),
+        ],
+        activeEnergySamples: [],
+        sleepSamples: [],
+        workouts: []
+    )
+
     static let summaries = HealthSummaryAggregator(calendar: calendar).summaries(
         from: snapshot,
         endingAt: referenceDate
