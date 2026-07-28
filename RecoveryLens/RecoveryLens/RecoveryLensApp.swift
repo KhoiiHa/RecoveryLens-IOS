@@ -9,7 +9,18 @@ struct RecoveryLensApp: App {
 
     init() {
         do {
+#if DEBUG
+            let configuration = ModelConfiguration(
+                isStoredInMemoryOnly: ProcessInfo.processInfo.arguments
+                    .contains("-portfolioScreenshots")
+            )
+            let container = try ModelContainer(
+                for: DailyCheckIn.self,
+                configurations: configuration
+            )
+#else
             let container = try ModelContainer(for: DailyCheckIn.self)
+#endif
             modelContainer = container
             checkInService = SwiftDataCheckInService(
                 modelContext: container.mainContext
@@ -70,6 +81,7 @@ private enum DebugHealthScenario {
     case partialData
     case queryError
     case demoData
+    case portfolioScreenshots
 
     init?(arguments: [String]) {
         let scenarios: [(argument: String, scenario: Self)] = [
@@ -81,6 +93,7 @@ private enum DebugHealthScenario {
             ("-partialData", .partialData),
             ("-queryError", .queryError),
             ("-demoData", .demoData),
+            ("-portfolioScreenshots", .portfolioScreenshots),
         ]
 
         guard let scenario = scenarios.first(
@@ -116,7 +129,7 @@ private enum DebugHealthScenario {
             )
         case .queryError:
             MockHealthKitClient(snapshotResult: .failure(.queryFailed))
-        case .demoData:
+        case .demoData, .portfolioScreenshots:
             MockHealthKitClient(
                 snapshotResult: .success(DemoData.snapshot)
             )

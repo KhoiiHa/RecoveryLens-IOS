@@ -105,10 +105,48 @@ final class RecoveryLensUITests: XCTestCase {
     }
 
     @MainActor
+    func testCapturePortfolioScreenshots() {
+        let app = launch(with: "-portfolioScreenshots")
+
+        XCTAssertTrue(
+            app.staticTexts["Tageswerte"].waitForExistence(timeout: 3)
+        )
+        addScreenshot(named: "01-dashboard", from: app)
+
+        app.buttons["Letzte sieben Tage, 3 Trainingseinheiten"].tap()
+        XCTAssertTrue(
+            app.navigationBars["Wochenübersicht"]
+                .waitForExistence(timeout: 3)
+        )
+        addScreenshot(named: "02-week-overview", from: app)
+
+        app.tabBars.buttons["Check-in"].tap()
+        XCTAssertTrue(
+            app.navigationBars["Tages-Check-in"]
+                .waitForExistence(timeout: 3)
+        )
+        XCTAssertTrue(
+            app.staticTexts["Wie fühlst du dich heute?"]
+                .waitForExistence(timeout: 3)
+        )
+        addScreenshot(named: "03-check-in", from: app)
+    }
+
+    @MainActor
     private func launch(with argument: String) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = [argument]
         app.launch()
         return app
+    }
+
+    private func addScreenshot(
+        named name: String,
+        from app: XCUIApplication
+    ) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 }
