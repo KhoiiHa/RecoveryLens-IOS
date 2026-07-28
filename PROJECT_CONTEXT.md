@@ -51,6 +51,8 @@ RecoveryLens interpretiert Messwerte nicht als „gut“, „schlecht“, „ges
 - kein Benutzerkonto und keine Cloud-Synchronisierung
 - keine Werbung, Analytik oder Drittanbieter-SDKs
 - keine Schreibzugriffe auf HealthKit
+- keine iPad-Unterstützung im MVP; App und Tests zielen ausschließlich auf
+  iPhone
 
 Diese Punkte gehören nicht stillschweigend in MVP 0.1. Änderungen am Umfang
 werden vor der Implementierung ausdrücklich vereinbart.

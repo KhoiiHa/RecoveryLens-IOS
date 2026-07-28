@@ -21,6 +21,10 @@ Bewusst ausgeschlossen sind Recovery-Scores, Ziele, Langzeittrends, Export,
 WidgetKit, App Intents und zusätzliche HealthKit-Werte. Diese Begrenzung hält
 Datennutzung, Testumfang und Produktaussage nachvollziehbar.
 
+Das MVP unterstützt ausschließlich iPhone. Eine deklarierte iPad-Kompatibilität
+ohne angepasste Navigation, Layoutprüfung und eigene UI-Tests wäre ein
+irreführendes Qualitätsversprechen und wurde deshalb bewusst entfernt.
+
 ## Zentrale Entscheidungen
 
 ### HealthKit hinter einem Client

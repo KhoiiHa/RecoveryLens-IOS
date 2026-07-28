@@ -24,6 +24,7 @@ keine persönlichen HealthKit-Daten im Repository gespeichert.
 - Lade-, Empty-, Partial-, Berechtigungs- und Fehlerzustände
 - Infoansicht zu Datenschutz und fachlichen Grenzen
 - deterministische Mock-Daten für Tests, Previews und Screenshots
+- bewusst auf iPhone begrenztes MVP
 
 ## Architektur
 
@@ -76,6 +77,7 @@ Weitere Entscheidungen und Trade-offs stehen in der
 
 - Xcode 26.5 oder kompatible neuere Version
 - iOS 26.5 Deployment Target
+- iPhone als unterstützte Gerätefamilie; iPad ist im MVP nicht vorgesehen
 - Apple-Developer-Team für einen Lauf auf einem realen iPhone
 - HealthKit-Capability und bestehender Purpose String im App-Target
 
