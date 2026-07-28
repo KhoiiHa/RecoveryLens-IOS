@@ -133,6 +133,42 @@ final class RecoveryLensUITests: XCTestCase {
     }
 
     @MainActor
+    func testAccessibilityTextSizeKeepsPrimaryFlowUsable() {
+        let app = launch(with: "-accessibilityText")
+
+        XCTAssertTrue(
+            app.navigationBars["Übersicht"].waitForExistence(timeout: 3)
+        )
+        addScreenshot(named: "accessibility-dashboard", from: app)
+
+        let weekButton = app.buttons[
+            "Letzte sieben Tage, 3 Trainingseinheiten"
+        ]
+        scrollUntilHittable(weekButton, in: app)
+        XCTAssertTrue(weekButton.isHittable)
+        weekButton.tap()
+
+        XCTAssertTrue(
+            app.navigationBars["Wochenübersicht"]
+                .waitForExistence(timeout: 3)
+        )
+        XCTAssertTrue(
+            app.staticTexts["7 von 7 Tagen mit Daten"].exists
+        )
+        addScreenshot(named: "accessibility-week-overview", from: app)
+
+        app.tabBars.buttons["Check-in"].tap()
+        XCTAssertTrue(
+            app.navigationBars["Check-in"].waitForExistence(timeout: 3)
+        )
+
+        let saveButton = app.buttons["Check-in speichern"]
+        scrollUntilHittable(saveButton, in: app)
+        XCTAssertTrue(saveButton.isHittable)
+        addScreenshot(named: "accessibility-check-in", from: app)
+    }
+
+    @MainActor
     private func launch(with argument: String) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = [argument]
@@ -148,5 +184,15 @@ final class RecoveryLensUITests: XCTestCase {
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
+    }
+
+    private func scrollUntilHittable(
+        _ element: XCUIElement,
+        in app: XCUIApplication,
+        maximumSwipes: Int = 8
+    ) {
+        for _ in 0..<maximumSwipes where !element.isHittable {
+            app.swipeUp()
+        }
     }
 }

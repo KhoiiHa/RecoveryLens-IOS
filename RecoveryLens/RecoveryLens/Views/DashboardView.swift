@@ -5,9 +5,7 @@ struct DashboardView: View {
     let showsMissingDataNotice: Bool
     let onRefresh: () async -> Void
 
-    private let columns = [
-        GridItem(.adaptive(minimum: 104, maximum: 180), spacing: 12),
-    ]
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         ScrollView {
@@ -26,7 +24,14 @@ struct DashboardView: View {
             .padding(.bottom, 32)
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle("RecoveryLens")
+        .navigationTitle(
+            dynamicTypeSize.isAccessibilitySize
+                ? "Übersicht"
+                : "RecoveryLens"
+        )
+        .navigationBarTitleDisplayMode(
+            dynamicTypeSize.isAccessibilitySize ? .inline : .automatic
+        )
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -112,6 +117,16 @@ struct DashboardView: View {
                 )
             }
         }
+    }
+
+    private var columns: [GridItem] {
+        if dynamicTypeSize.isAccessibilitySize {
+            return [GridItem(.flexible())]
+        }
+
+        return [
+            GridItem(.adaptive(minimum: 104, maximum: 180), spacing: 12),
+        ]
     }
 
     private var weekSection: some View {
@@ -203,29 +218,14 @@ private struct MetricCard: View {
     let systemImage: String
     let tint: Color
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Image(systemName: systemImage)
-                .font(.title3)
-                .foregroundStyle(tint)
-                .accessibilityHidden(true)
-
-            Text(title)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-
-            Spacer(minLength: 0)
-
-            Text(value)
-                .font(.title2.bold())
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-
-            if let detail {
-                Text(detail)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
+        Group {
+            if dynamicTypeSize.isAccessibilitySize {
+                accessibilityContent
+            } else {
+                standardContent
             }
         }
         .frame(maxWidth: .infinity, minHeight: 132, alignment: .leading)
@@ -233,6 +233,58 @@ private struct MetricCard: View {
         .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .accessibilityElement(children: .combine)
+    }
+
+    private var standardContent: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            icon
+            titleText
+
+            Spacer(minLength: 0)
+
+            valueText
+            detailText
+        }
+    }
+
+    private var accessibilityContent: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            icon
+            titleText
+            valueText
+            detailText
+        }
+    }
+
+    private var icon: some View {
+        Image(systemName: systemImage)
+            .font(.title3)
+            .foregroundStyle(tint)
+            .accessibilityHidden(true)
+    }
+
+    private var titleText: some View {
+        Text(title)
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var valueText: some View {
+        Text(value)
+            .font(.title2.bold())
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+    }
+
+    @ViewBuilder
+    private var detailText: some View {
+        if let detail {
+            Text(detail)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
     }
 }
 

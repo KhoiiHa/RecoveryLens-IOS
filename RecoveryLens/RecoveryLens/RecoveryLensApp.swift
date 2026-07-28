@@ -10,9 +10,11 @@ struct RecoveryLensApp: App {
     init() {
         do {
 #if DEBUG
+            let arguments = ProcessInfo.processInfo.arguments
             let configuration = ModelConfiguration(
-                isStoredInMemoryOnly: ProcessInfo.processInfo.arguments
-                    .contains("-portfolioScreenshots")
+                isStoredInMemoryOnly:
+                    arguments.contains("-portfolioScreenshots")
+                    || arguments.contains("-accessibilityText")
             )
             let container = try ModelContainer(
                 for: DailyCheckIn.self,
@@ -61,6 +63,17 @@ struct RecoveryLensApp: App {
 #if DEBUG
     @ViewBuilder
     private func debugContent(for scenario: DebugHealthScenario) -> some View {
+        if scenario.usesAccessibilityTextSize {
+            debugRootView(for: scenario)
+                .environment(\.dynamicTypeSize, .accessibility5)
+        } else {
+            debugRootView(for: scenario)
+        }
+    }
+
+    private func debugRootView(
+        for scenario: DebugHealthScenario
+    ) -> ContentView {
         ContentView(
             healthKitClient: scenario.healthKitClient,
             checkInService: checkInService,
@@ -82,6 +95,7 @@ private enum DebugHealthScenario {
     case queryError
     case demoData
     case portfolioScreenshots
+    case accessibilityText
 
     init?(arguments: [String]) {
         let scenarios: [(argument: String, scenario: Self)] = [
@@ -94,6 +108,7 @@ private enum DebugHealthScenario {
             ("-queryError", .queryError),
             ("-demoData", .demoData),
             ("-portfolioScreenshots", .portfolioScreenshots),
+            ("-accessibilityText", .accessibilityText),
         ]
 
         guard let scenario = scenarios.first(
@@ -129,11 +144,15 @@ private enum DebugHealthScenario {
             )
         case .queryError:
             MockHealthKitClient(snapshotResult: .failure(.queryFailed))
-        case .demoData, .portfolioScreenshots:
+        case .demoData, .portfolioScreenshots, .accessibilityText:
             MockHealthKitClient(
                 snapshotResult: .success(DemoData.snapshot)
             )
         }
+    }
+
+    var usesAccessibilityTextSize: Bool {
+        self == .accessibilityText
     }
 }
 

@@ -5,6 +5,7 @@ struct WeekOverviewView: View {
     let content: WeekOverviewContent
 
     @State private var selectedMetric = WeekMetric.steps
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         ScrollView {
@@ -33,14 +34,7 @@ struct WeekOverviewView: View {
 
     private var chartSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(selectedMetric.title)
-                    .font(.title2.bold())
-                Spacer()
-                Text(selectedMetric.unit)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
+            metricHeader
 
             if chartPoints.isEmpty {
                 ContentUnavailableView(
@@ -51,6 +45,8 @@ struct WeekOverviewView: View {
                     )
                 )
                 .frame(height: 220)
+            } else if dynamicTypeSize.isAccessibilitySize {
+                accessibleValueList
             } else {
                 Chart(chartPoints) { point in
                     BarMark(
@@ -93,6 +89,55 @@ struct WeekOverviewView: View {
         .padding(16)
         .background(Color(.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    @ViewBuilder
+    private var metricHeader: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            Text(selectedMetric.title)
+                .font(.title2.bold())
+                .fixedSize(horizontal: false, vertical: true)
+        } else {
+            HStack(alignment: .firstTextBaseline) {
+                Text(selectedMetric.title)
+                    .font(.title2.bold())
+                Spacer()
+                Text(selectedMetric.unit)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private var accessibleValueList: some View {
+        LazyVStack(alignment: .leading, spacing: 0) {
+            ForEach(
+                Array(chartPoints.enumerated()),
+                id: \.element.id
+            ) { index, point in
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(
+                        point.date.formatted(
+                            .dateTime
+                                .weekday(.wide)
+                                .day()
+                                .month(.abbreviated)
+                                .locale(Locale(identifier: "de_DE"))
+                        )
+                    )
+                    .font(.headline)
+
+                    Text(formattedChartValue(point.value))
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.vertical, 10)
+                .accessibilityElement(children: .combine)
+
+                if index < chartPoints.count - 1 {
+                    Divider()
+                }
+            }
+        }
     }
 
     @ViewBuilder
@@ -161,40 +206,83 @@ struct WeekOverviewView: View {
 private struct WorkoutRow: View {
     let workout: WorkoutSummary
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     var body: some View {
+        Group {
+            if dynamicTypeSize.isAccessibilitySize {
+                accessibilityContent
+            } else {
+                standardContent
+            }
+        }
+        .padding(.vertical, 12)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var standardContent: some View {
         HStack(spacing: 12) {
-            Image(systemName: "figure.run")
-                .font(.headline)
-                .foregroundStyle(.tint)
-                .frame(width: 40, height: 40)
-                .background(Color.accentColor.opacity(0.12))
-                .clipShape(Circle())
-                .accessibilityHidden(true)
+            icon
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(workout.activityName)
-                    .font(.headline)
-
-                Text(formattedStartDate)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                workoutTitle
+                workoutDate
             }
 
             Spacer(minLength: 12)
 
             VStack(alignment: .trailing, spacing: 4) {
-                Text("\(workout.durationMinutes) Min.")
-                    .font(.subheadline.weight(.medium))
-
-                if let energy = workout.activeEnergyKilocalories {
-                    Text("\(Int(energy.rounded()).formatted()) kcal")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
+                workoutDuration
+                workoutEnergy
             }
         }
-        .padding(.vertical, 12)
-        .accessibilityElement(children: .combine)
+    }
+
+    private var accessibilityContent: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            icon
+            workoutTitle
+            workoutDate
+            workoutDuration
+            workoutEnergy
+        }
+    }
+
+    private var icon: some View {
+        Image(systemName: "figure.run")
+            .font(.headline)
+            .foregroundStyle(.tint)
+            .frame(width: 40, height: 40)
+            .background(Color.accentColor.opacity(0.12))
+            .clipShape(Circle())
+            .accessibilityHidden(true)
+    }
+
+    private var workoutTitle: some View {
+        Text(workout.activityName)
+            .font(.headline)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var workoutDate: some View {
+        Text(formattedStartDate)
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var workoutDuration: some View {
+        Text("\(workout.durationMinutes) Min.")
+            .font(.subheadline.weight(.medium))
+    }
+
+    @ViewBuilder
+    private var workoutEnergy: some View {
+        if let energy = workout.activeEnergyKilocalories {
+            Text("\(Int(energy.rounded()).formatted()) kcal")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
     }
 
     private var formattedStartDate: String {

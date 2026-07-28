@@ -3,6 +3,8 @@ import SwiftUI
 struct CheckInView: View {
     @Bindable var viewModel: CheckInViewModel
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     var body: some View {
         Form {
             statusSection
@@ -18,10 +20,25 @@ struct CheckInView: View {
             )
             noteSection
             medicalNotice
+
+            if dynamicTypeSize.isAccessibilitySize {
+                Section {
+                    saveButton
+                }
+            }
         }
-        .navigationTitle("Tages-Check-in")
+        .navigationTitle(
+            dynamicTypeSize.isAccessibilitySize
+                ? "Check-in"
+                : "Tages-Check-in"
+        )
+        .navigationBarTitleDisplayMode(
+            dynamicTypeSize.isAccessibilitySize ? .inline : .automatic
+        )
         .safeAreaInset(edge: .bottom) {
-            saveButton
+            if !dynamicTypeSize.isAccessibilitySize {
+                pinnedSaveButton
+            }
         }
         .task {
             guard viewModel.state == .idle else {
@@ -142,10 +159,15 @@ struct CheckInView: View {
                 systemImage: "checkmark"
             )
             .frame(maxWidth: .infinity)
+            .fixedSize(horizontal: false, vertical: true)
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
         .disabled(!viewModel.canSave)
+    }
+
+    private var pinnedSaveButton: some View {
+        saveButton
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
         .background(.bar)
