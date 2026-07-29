@@ -137,9 +137,12 @@ RECOVERYLENS_DESTINATION='platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5' \
 
 ## Projektstatus
 
-MVP 0.1 ist funktional umgesetzt und auf Simulatorbasis automatisiert geprüft.
-Die abschließende Verifikation des Live-HealthKit-Flows auf einem realen Gerät
-ist bewusst als offener Release-Schritt dokumentiert.
+MVP `0.1.0 (1)` ist funktional umgesetzt und auf Simulatorbasis automatisiert
+geprüft. Ein unsigniertes Release-Archive baut lokal erfolgreich. Die
+abschließende Verifikation des Live-HealthKit-Flows auf einem realen Gerät,
+Signierung und Upload sind weiterhin offene Release-Schritte. Der verifizierte
+Stand und die verbleibenden Gates stehen in der
+[TestFlight-Checkliste](TESTFLIGHT_CHECKLIST.md).
 
 ## Apple-Dokumentation
 

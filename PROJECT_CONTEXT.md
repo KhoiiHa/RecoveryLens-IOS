@@ -259,6 +259,8 @@ MVP 0.1 ist erst abgeschlossen, wenn:
 - das README Architektur, Setup, Datenschutz und Teststrategie erklärt
 - eine kurze Case Study Entscheidungen und Trade-offs dokumentiert
 - Grenzen der Gesundheitsauswertung klar dokumentiert sind
+- der lokale Release-Stand und externe TestFlight-Gates nachvollziehbar
+  dokumentiert sind
 
 ## Implementierungsblöcke
 
@@ -275,6 +277,12 @@ Commit:
 8. Infoansicht, Datenschutztexte und UI-Zustände
 9. Demo-Screenshots, App Icon, README und Case Study
 10. Abschlussprüfung auf Simulator und realem Gerät
+11. Release-Metadaten und TestFlight-Checkliste
+
+Die MVP-Marketing-Version ist `0.1.0`. Jeder Upload verwendet eine eindeutige,
+aufsteigende Build-Nummer. Der aktuelle Release-Stand und alle Schritte, die
+ein Developer-Konto oder physisches iPhone voraussetzen, werden in
+`TESTFLIGHT_CHECKLIST.md` geführt.
 
 Vor jedem Block werden die konkret betroffenen Dateien benannt. Es werden nur
 diese Dateien geändert. Große Refactorings, neue Abhängigkeiten und

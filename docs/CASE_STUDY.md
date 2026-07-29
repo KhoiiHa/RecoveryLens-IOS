@@ -113,6 +113,11 @@ Release müssen der Live-Berechtigungsdialog, einzelne verweigerte Datentypen,
 reale Schlafquellen und Trainingseinheiten ohne Energieangabe auf Hardware
 geprüft werden.
 
+Der lokale Release-Build und die Store-Vorbereitung sind in der
+[TestFlight-Checkliste](../TESTFLIGHT_CHECKLIST.md) getrennt dokumentiert.
+Signierung, App-Store-Connect-Verarbeitung und Hardware-Verifikation werden
+nicht durch ein erfolgreiches Simulator- oder unsigniertes Archive vorgetäuscht.
+
 Vor einem späteren Widget wird erneut anhand der dann aktuellen
 Apple-Dokumentation geprüft, welche HealthKit-Daten eine Extension zuverlässig
 lesen darf. Falls nötig, stellt nur die Haupt-App einen minimalen,
