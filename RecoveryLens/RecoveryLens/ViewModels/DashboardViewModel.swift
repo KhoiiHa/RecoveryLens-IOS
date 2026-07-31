@@ -91,10 +91,19 @@ final class DashboardViewModel {
         let referenceDate = now()
         let todayStart = calendar.startOfDay(for: referenceDate)
 
-        guard let startDate = calendar.date(
+        guard let firstDisplayedDay = calendar.date(
             byAdding: .day,
             value: -6,
             to: todayStart
+        ), let previousDay = calendar.date(
+            byAdding: .day,
+            value: -1,
+            to: firstDisplayedDay
+        ), let startDate = calendar.date(
+            bySettingHour: 12,
+            minute: 0,
+            second: 0,
+            of: previousDay
         ), let endDate = calendar.date(
             byAdding: .day,
             value: 1,

@@ -64,7 +64,7 @@ struct DashboardViewModelTests {
     }
 
     @Test
-    func loadUsesSevenLocalCalendarDays() async throws {
+    func loadIncludesSleepContextForSevenLocalCalendarDays() async throws {
         let client = DashboardHealthKitSpy(snapshot: DemoData.snapshot)
         let viewModel = makeViewModel(client: client)
 
@@ -73,7 +73,12 @@ struct DashboardViewModelTests {
         let range = try #require(client.fetchRanges.first)
         let expectedStart = try #require(
             DemoData.calendar.date(
-                from: DateComponents(year: 2026, month: 7, day: 22)
+                from: DateComponents(
+                    year: 2026,
+                    month: 7,
+                    day: 21,
+                    hour: 12
+                )
             )
         )
         let expectedEnd = try #require(

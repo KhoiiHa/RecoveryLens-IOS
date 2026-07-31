@@ -165,6 +165,8 @@ und dürfen nicht automatisch als Null interpretiert werden.
 - Schritte und aktive Energie werden pro Kalendertag summiert.
 - Trainingseinheiten werden nach ihrem Startdatum einem Tag zugeordnet.
 - Schlaf wird aus relevanten Schlaf-Samples aufbereitet.
+- Ein Schlaftag reicht lokal von 12 Uhr des Vortags bis 12 Uhr des angezeigten
+  Tages. Eine Nacht über Mitternacht wird dadurch dem Aufwachtag zugeordnet.
 - Als Schlaf zählen `asleepUnspecified`, `asleepCore`, `asleepDeep` und
   `asleepREM`; `inBed` und `awake` zählen nicht als Schlaf.
 - Überlappende Schlafintervalle dürfen nicht doppelt gezählt werden.
@@ -288,17 +290,13 @@ Vor jedem Block werden die konkret betroffenen Dateien benannt. Es werden nur
 diese Dateien geändert. Große Refactorings, neue Abhängigkeiten und
 Umfangserweiterungen benötigen eine separate Freigabe.
 
-## Technische Ausgangslage
+## Technischer Stand
 
 - SwiftUI-App mit App-, Unit-Test- und UI-Test-Target
-- SwiftData-Xcode-Template als aktueller Ausgangspunkt
+- umgesetzte MVVM-Struktur mit HealthKit-Client und SwiftData-Check-in-Service
 - iOS Deployment Target 26.5
 - Swift 5 Build-Einstellung
 - keine Drittanbieter-Abhängigkeiten
-
-Die Template-Typen `Item`, `ContentView` und die initiale
-`ModelContainer`-Konfiguration sind noch keine fachliche Architektur und werden
-erst in den jeweils freigegebenen Implementierungsblöcken ersetzt.
 
 ## Verbindliche Apple-Referenzen
 

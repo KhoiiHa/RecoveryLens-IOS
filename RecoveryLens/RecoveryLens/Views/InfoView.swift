@@ -114,7 +114,7 @@ struct InfoView: View {
 
             InfoRow(
                 title: "Schlafdauer",
-                detail: "Gezählt werden nur von Apple Health als Schlaf markierte Zeiträume. Überlappungen verschiedener Quellen werden nicht doppelt gezählt; Bett- und Wachzeiten zählen nicht als Schlaf.",
+                detail: "Gezählt werden nur von Apple Health als Schlaf markierte Zeiträume. Ein Schlaftag reicht von 12 Uhr des Vortags bis 12 Uhr des angezeigten Tages, damit eine Nacht nicht an Mitternacht geteilt wird. Überlappungen werden nicht doppelt gezählt; Bett- und Wachzeiten zählen nicht als Schlaf.",
                 systemImage: "bed.double.fill",
                 tint: .indigo
             )

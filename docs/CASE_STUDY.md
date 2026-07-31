@@ -51,6 +51,10 @@ Bei Schlaf zählen nur die HealthKit-Zustände `asleepUnspecified`,
 als Schlafdauer behandelt. Schlafintervalle werden vereinigt und
 überlappende Wachintervalle abgezogen.
 
+Ein lokaler Schlaftag reicht von 12 Uhr des Vortags bis 12 Uhr des angezeigten
+Tages. Dadurch bleibt eine Nacht über Mitternacht zusammen und wird dem Tag
+des Aufwachens zugeordnet, ohne Schlafphasen medizinisch zu interpretieren.
+
 Mehrere Apps oder Geräte können dieselben Zeiträume liefern. Da HealthKit
 keine allgemeine Qualitätsrangfolge für Quellen vorgibt, erfindet RecoveryLens
 keine geräte- oder herstellerspezifische Priorität. Stattdessen werden

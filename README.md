@@ -71,9 +71,11 @@ Kalendertagen einschließlich heute.
 
 Für die Schlafdauer zählen ausschließlich die von HealthKit als Schlaf
 klassifizierten Zustände. Bett- und Wachzeiten werden nicht als Schlaf
-gerechnet. Überlappende Intervalle mehrerer Quellen werden zeitlich
-zusammengeführt, ohne einzelne Apps oder Geräte als vermeintlich bessere Quelle
-einzustufen.
+gerechnet. Der lokale Schlaftag reicht von 12 Uhr des Vortags bis 12 Uhr des
+angezeigten Tages, damit eine zusammenhängende Nacht nicht an Mitternacht
+geteilt wird. Überlappende Intervalle mehrerer Quellen werden zeitlich
+zusammengeführt, ohne einzelne Apps oder Geräte als vermeintlich bessere
+Quelle einzustufen.
 
 Weitere Entscheidungen und Trade-offs stehen in der
 [Case Study](docs/CASE_STUDY.md).

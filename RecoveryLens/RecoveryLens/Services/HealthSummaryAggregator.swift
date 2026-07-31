@@ -19,8 +19,11 @@ struct HealthSummaryAggregator {
         let endDay = calendar.startOfDay(for: referenceDate)
 
         return (0..<dayCount).reversed().compactMap { dayOffset in
-            guard let day = calendar.date(byAdding: .day, value: -dayOffset, to: endDay),
-                  let nextDay = calendar.date(byAdding: .day, value: 1, to: day) else {
+            guard let day = calendar.date(
+                byAdding: .day,
+                value: -dayOffset,
+                to: endDay
+            ), let sleepDay = sleepDayInterval(endingOn: day) else {
                 return nil
             }
 
@@ -33,14 +36,27 @@ struct HealthSummaryAggregator {
                 ),
                 sleepMinutes: sleepMinutes(
                     in: snapshot.sleepSamples,
-                    from: day,
-                    to: nextDay
+                    from: sleepDay.start,
+                    to: sleepDay.end
                 ),
                 workouts: snapshot.workouts
                     .filter { calendar.isDate($0.startDate, inSameDayAs: day) }
                     .sorted { $0.startDate < $1.startDate }
             )
         }
+    }
+
+    private func sleepDayInterval(endingOn day: Date) -> DateInterval? {
+        guard let end = calendar.date(
+            bySettingHour: 12,
+            minute: 0,
+            second: 0,
+            of: day
+        ), let start = calendar.date(byAdding: .day, value: -1, to: end) else {
+            return nil
+        }
+
+        return DateInterval(start: start, end: end)
     }
 
     private func summedSteps(in samples: [QuantitySample], on day: Date) -> Int? {

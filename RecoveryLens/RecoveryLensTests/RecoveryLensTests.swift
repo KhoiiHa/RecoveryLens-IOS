@@ -152,7 +152,7 @@ struct RecoveryLensTests {
     }
 
     @Test
-    func sleepAcrossMidnightIsSplitAtLocalDayBoundaries() throws {
+    func consecutiveNightsAreAssignedToTheirWakeDays() throws {
         let snapshot = HealthDataSnapshot(
             stepSamples: [],
             activeEnergySamples: [],
@@ -161,6 +161,11 @@ struct RecoveryLensTests {
                     startDate: try date(year: 2026, month: 7, day: 27, hour: 23),
                     endDate: try date(year: 2026, month: 7, day: 28, hour: 7),
                     state: .asleepREM
+                ),
+                SleepSample(
+                    startDate: try date(year: 2026, month: 7, day: 28, hour: 22),
+                    endDate: try date(year: 2026, month: 7, day: 29, hour: 6),
+                    state: .asleepCore
                 )
             ],
             workouts: []
@@ -168,11 +173,11 @@ struct RecoveryLensTests {
 
         let summaries = HealthSummaryAggregator(calendar: calendar).summaries(
             from: snapshot,
-            endingAt: try date(year: 2026, month: 7, day: 28, hour: 12)
+            endingAt: try date(year: 2026, month: 7, day: 29, hour: 15)
         )
 
-        #expect(summaries[summaries.count - 2].sleepMinutes == 60)
-        #expect(summaries.last?.sleepMinutes == 420)
+        #expect(summaries[summaries.count - 2].sleepMinutes == 480)
+        #expect(summaries.last?.sleepMinutes == 480)
     }
 
     @Test
@@ -243,7 +248,7 @@ struct RecoveryLensTests {
     func demoDataIsDeterministicAndComplete() {
         #expect(DemoData.summaries.count == 7)
         #expect(DemoData.summaries.last?.steps == 8_840)
-        #expect(DemoData.summaries.last?.sleepMinutes == 420)
+        #expect(DemoData.summaries.last?.sleepMinutes == 470)
         #expect(DemoData.summaries.flatMap(\.workouts).count == 3)
     }
 
