@@ -19,7 +19,7 @@ final class CheckInViewModel {
     var moodLevel = 3
     var note = ""
 
-    let date: Date
+    private(set) var date: Date
 
     var canSave: Bool {
         (1...5).contains(energyLevel)
@@ -33,13 +33,16 @@ final class CheckInViewModel {
     }
 
     private let checkInService: any CheckInService
+    private let calendar: Calendar
 
     init(
         checkInService: any CheckInService,
-        date: Date = Date()
+        date: Date = Date(),
+        calendar: Calendar = .current
     ) {
         self.checkInService = checkInService
         self.date = date
+        self.calendar = calendar
     }
 
     func load() {
@@ -93,5 +96,19 @@ final class CheckInViewModel {
                     : error.localizedDescription
             )
         }
+    }
+
+    func refreshDateIfNeeded(_ currentDate: Date) {
+        guard !calendar.isDate(date, inSameDayAs: currentDate) else {
+            return
+        }
+
+        date = currentDate
+        energyLevel = 3
+        moodLevel = 3
+        note = ""
+        isExistingCheckIn = false
+        state = .idle
+        load()
     }
 }

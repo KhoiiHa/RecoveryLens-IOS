@@ -1,8 +1,12 @@
+import Foundation
 import SwiftUI
 
 struct ContentView: View {
     @State private var dashboardViewModel: DashboardViewModel
     @State private var checkInViewModel: CheckInViewModel
+    @Environment(\.scenePhase) private var scenePhase
+
+    private let now: () -> Date
 
     init(
         healthKitClient: any HealthKitClient,
@@ -10,6 +14,7 @@ struct ContentView: View {
         calendar: Calendar = .current,
         now: @escaping () -> Date = Date.init
     ) {
+        self.now = now
         _dashboardViewModel = State(
             initialValue: DashboardViewModel(
                 healthKitClient: healthKitClient,
@@ -20,7 +25,8 @@ struct ContentView: View {
         _checkInViewModel = State(
             initialValue: CheckInViewModel(
                 checkInService: checkInService,
-                date: now()
+                date: now(),
+                calendar: calendar
             )
         )
     }
@@ -53,6 +59,24 @@ struct ContentView: View {
             }
             .tabItem {
                 Label("Info", systemImage: "info.circle.fill")
+            }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            guard newPhase == .active else {
+                return
+            }
+
+            checkInViewModel.refreshDateIfNeeded(now())
+        }
+        .task {
+            for await _ in NotificationCenter.default.notifications(
+                named: .NSCalendarDayChanged
+            ) {
+                guard !Task.isCancelled else {
+                    return
+                }
+
+                checkInViewModel.refreshDateIfNeeded(now())
             }
         }
     }

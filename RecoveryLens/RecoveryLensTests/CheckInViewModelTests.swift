@@ -88,12 +88,63 @@ struct CheckInViewModelTests {
         assertFailure(saveViewModel.state, message: "Testfehler")
     }
 
+    @Test
+    func refreshDateKeepsDraftWithinSameCalendarDay() throws {
+        let service = CheckInServiceSpy()
+        let viewModel = makeViewModel(service: service)
+        viewModel.load()
+        viewModel.energyLevel = 5
+        viewModel.note = "Bleibt erhalten"
+        let evening = try #require(
+            DemoData.calendar.date(
+                bySettingHour: 21,
+                minute: 0,
+                second: 0,
+                of: DemoData.referenceDate
+            )
+        )
+
+        viewModel.refreshDateIfNeeded(evening)
+
+        #expect(viewModel.date == DemoData.referenceDate)
+        #expect(viewModel.energyLevel == 5)
+        #expect(viewModel.note == "Bleibt erhalten")
+        #expect(service.requestedDates == [DemoData.referenceDate])
+    }
+
+    @Test
+    func refreshDateLoadsDefaultsForNextCalendarDay() throws {
+        let service = CheckInServiceSpy()
+        let viewModel = makeViewModel(service: service)
+        viewModel.load()
+        viewModel.energyLevel = 5
+        viewModel.moodLevel = 1
+        viewModel.note = "Alter Tag"
+        let nextDay = try #require(
+            DemoData.calendar.date(
+                byAdding: .day,
+                value: 1,
+                to: DemoData.referenceDate
+            )
+        )
+
+        viewModel.refreshDateIfNeeded(nextDay)
+
+        #expect(viewModel.date == nextDay)
+        #expect(viewModel.energyLevel == 3)
+        #expect(viewModel.moodLevel == 3)
+        #expect(viewModel.note.isEmpty)
+        #expect(viewModel.state == .ready)
+        #expect(service.requestedDates == [DemoData.referenceDate, nextDay])
+    }
+
     private func makeViewModel(
         service: CheckInServiceSpy
     ) -> CheckInViewModel {
         CheckInViewModel(
             checkInService: service,
-            date: DemoData.referenceDate
+            date: DemoData.referenceDate,
+            calendar: DemoData.calendar
         )
     }
 
