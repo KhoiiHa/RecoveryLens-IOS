@@ -63,6 +63,12 @@ final class RecoveryLensUITests: XCTestCase {
         ]
         scrollUntilHittable(privacyPolicyLink, in: app)
         XCTAssertTrue(privacyPolicyLink.isHittable)
+
+        let supportLink = app.descendants(matching: .any)[
+            "support-email-link"
+        ]
+        scrollUntilHittable(supportLink, in: app)
+        XCTAssertTrue(supportLink.isHittable)
     }
 
     @MainActor

@@ -60,6 +60,8 @@ Die vollständige [Datenschutzerklärung](PRIVACY.md) ist öffentlich erreichbar
 und in der Infoansicht der App verlinkt. Das gebündelte Privacy Manifest
 deklariert entsprechend der aktuellen Implementierung kein Tracking, keine
 Off-Device-Datenerhebung und keine direkt verwendeten Required-Reason-APIs.
+Technische Rückfragen können über die [Supportseite](SUPPORT.md) ohne
+Veröffentlichung persönlicher Gesundheitsdaten gestellt werden.
 
 ## Fachliche Grenzen
 
@@ -133,9 +135,12 @@ Die drei README-Screenshots werden mit einem fokussierten UI-Test erzeugt:
 Ein anderes vorhandenes Simulatorziel kann explizit gesetzt werden:
 
 ```bash
-RECOVERYLENS_DESTINATION='platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5' \
+RECOVERYLENS_DESTINATION='platform=iOS Simulator,name=iPhone 17 Pro Max,OS=26.5' \
 ./scripts/capture_portfolio_screenshots.sh
 ```
+
+Die Standardausgabe verwendet das von App Store Connect akzeptierte
+6,9-Zoll-iPhone-Format. Es werden ausschließlich synthetische Daten erfasst.
 
 ## Projektstatus
 

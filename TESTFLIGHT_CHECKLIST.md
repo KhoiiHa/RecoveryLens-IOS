@@ -25,6 +25,7 @@ bleibt für weitere Builds dieses MVPs bei `0.1.0`.
 - [x] Keine Drittanbieter-SDKs, Analytik, Werbung oder Netzwerkübertragung
 - [x] Keine eigene oder nicht ausgenommene Verschlüsselung
 - [x] Reproduzierbare Demo-Daten und Portfolio-Screenshots sind vorhanden
+- [x] Screenshots liegen im akzeptierten 6,9-Zoll-iPhone-Format vor
 - [x] Unit- und UI-Testabdeckung für die MVP-Zustände ist vorhanden
 - [x] Xcode 26.6 und iOS-26-SDK erfüllen die Upload-Anforderung ab April 2026
 
@@ -37,6 +38,7 @@ an App Store Connect übertragbarer Build.
 - [ ] Bundle Identifier im verwendeten Developer-Team registrieren
 - [ ] App-Datensatz in App Store Connect anlegen oder prüfen
 - [ ] Automatische Signierung ohne Fehler auflösen
+- [ ] Verfügbarkeit auf Apple-Silicon-Macs in App Store Connect deaktivieren
 - [ ] Live-HealthKit-Flow auf einem physischen iPhone prüfen
 - [ ] Berechtigungsdialog und einzeln verweigerte Datentypen prüfen
 - [ ] Reale Schlafdaten aus mehreren Quellen prüfen
@@ -52,7 +54,10 @@ Ob das für dieses Team möglich ist, muss im Organizer geprüft werden.
 
 ## App Store Connect
 
-- [ ] Support- und Datenschutz-URL hinterlegen
+- [ ] Support-URL hinterlegen:
+      `https://github.com/KhoiiHa/RecoveryLens-IOS/blob/main/SUPPORT.md`
+- [ ] Datenschutz-URL hinterlegen:
+      `https://github.com/KhoiiHa/RecoveryLens-IOS/blob/main/PRIVACY.md`
 - [ ] App-Privacy-Antworten anhand von `PRIVACY.md` ausfüllen
 - [ ] Altersfreigabe-Fragen vollständig beantworten
 - [ ] Export-Compliance-Angabe gegen den Build prüfen

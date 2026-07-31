@@ -9,6 +9,7 @@ struct InfoView: View {
             permissions
             boundaries
             privacyPolicy
+            support
         }
         .navigationTitle("Info & Datenschutz")
         .navigationBarTitleDisplayMode(.inline)
@@ -141,6 +142,23 @@ struct InfoView: View {
                 )
             }
             .accessibilityIdentifier("privacy-policy-link")
+        }
+    }
+
+    private var support: some View {
+        Section("Kontakt") {
+            Link(
+                destination: URL(string: "mailto:hakhoi@gmx.de")!
+            ) {
+                Label("Support per E-Mail", systemImage: "envelope")
+            }
+            .accessibilityIdentifier("support-email-link")
+
+            Text(
+                "Bitte sende keine HealthKit-Werte, Check-in-Notizen oder anderen sensiblen Gesundheitsdaten mit."
+            )
+            .font(.footnote)
+            .foregroundStyle(.secondary)
         }
     }
 }

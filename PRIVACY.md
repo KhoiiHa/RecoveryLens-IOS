@@ -60,6 +60,10 @@ Datenschutzerklärung vor einer Veröffentlichung entsprechend aktualisiert.
 
 ## Kontakt
 
-Fragen zum Datenschutz können über die
-[GitHub-Issues des Projekts](https://github.com/KhoiiHa/RecoveryLens-IOS/issues)
-gestellt werden.
+Fragen zum Datenschutz können vertraulich per E-Mail an
+[hakhoi@gmx.de](mailto:hakhoi@gmx.de) gestellt werden. Bitte sende keine
+HealthKit-Werte, Check-in-Notizen oder anderen sensiblen Gesundheitsdaten mit.
+
+Allgemeine technische Hinweise stehen auf der
+[Supportseite](SUPPORT.md). Öffentliche GitHub-Issues sind ausschließlich für
+Fehlerberichte ohne persönliche oder gesundheitliche Angaben vorgesehen.

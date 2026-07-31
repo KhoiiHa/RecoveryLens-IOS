@@ -9,7 +9,7 @@ WORK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/recoverylens-screenshots.XXXXXX")"
 RESULT_BUNDLE="$WORK_DIR/RecoveryLensScreenshots.xcresult"
 ATTACHMENT_DIR="$WORK_DIR/attachments"
 DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
-DESTINATION="${RECOVERYLENS_DESTINATION:-platform=iOS Simulator,name=iPhone 17,OS=26.5}"
+DESTINATION="${RECOVERYLENS_DESTINATION:-platform=iOS Simulator,name=iPhone 17 Pro Max,OS=26.5}"
 
 cleanup() {
     rm -rf "$WORK_DIR"
