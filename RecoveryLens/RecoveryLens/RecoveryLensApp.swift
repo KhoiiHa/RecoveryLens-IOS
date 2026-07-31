@@ -4,13 +4,21 @@ import SwiftUI
 
 @main
 struct RecoveryLensApp: App {
-    private let modelContainer: ModelContainer
-    private let checkInService: SwiftDataCheckInService
+    private let modelContainer: ModelContainer?
+    private let checkInService: any CheckInService
 
     init() {
+#if DEBUG
+        let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("-persistenceUnavailable") {
+            modelContainer = nil
+            checkInService = UnavailableCheckInService()
+            return
+        }
+#endif
+
         do {
 #if DEBUG
-            let arguments = ProcessInfo.processInfo.arguments
             let configuration = ModelConfiguration(
                 isStoredInMemoryOnly:
                     arguments.contains("-portfolioScreenshots")
@@ -28,15 +36,25 @@ struct RecoveryLensApp: App {
                 modelContext: container.mainContext
             )
         } catch {
-            fatalError("SwiftData konnte nicht initialisiert werden: \(error)")
+            modelContainer = nil
+            checkInService = UnavailableCheckInService()
         }
     }
 
     var body: some Scene {
         WindowGroup {
+            configuredRootView
+        }
+    }
+
+    @ViewBuilder
+    private var configuredRootView: some View {
+        if let modelContainer {
+            rootView
+                .modelContainer(modelContainer)
+        } else {
             rootView
         }
-        .modelContainer(modelContainer)
     }
 
     @ViewBuilder

@@ -9,6 +9,7 @@ final class CheckInViewModel {
         case loading
         case ready
         case saved
+        case unavailable(String)
         case failed(String)
     }
 
@@ -26,6 +27,7 @@ final class CheckInViewModel {
             && (1...5).contains(moodLevel)
             && note.count <= SwiftDataCheckInService.maximumNoteLength
             && state != .loading
+            && !isPersistenceUnavailable
     }
 
     var remainingNoteCharacters: Int {
@@ -61,10 +63,9 @@ final class CheckInViewModel {
             isExistingCheckIn = true
             state = .ready
         } catch {
-            state = .failed(
-                error.localizedDescription.isEmpty
-                    ? "Der Check-in konnte nicht geladen werden."
-                    : error.localizedDescription
+            state = failureState(
+                for: error,
+                fallback: "Der Check-in konnte nicht geladen werden."
             )
         }
     }
@@ -90,10 +91,9 @@ final class CheckInViewModel {
             isExistingCheckIn = true
             state = .saved
         } catch {
-            state = .failed(
-                error.localizedDescription.isEmpty
-                    ? "Der Check-in konnte nicht gespeichert werden."
-                    : error.localizedDescription
+            state = failureState(
+                for: error,
+                fallback: "Der Check-in konnte nicht gespeichert werden."
             )
         }
     }
@@ -110,5 +110,25 @@ final class CheckInViewModel {
         isExistingCheckIn = false
         state = .idle
         load()
+    }
+
+    private var isPersistenceUnavailable: Bool {
+        guard case .unavailable = state else {
+            return false
+        }
+
+        return true
+    }
+
+    private func failureState(for error: Error, fallback: String) -> State {
+        let message = error.localizedDescription.isEmpty
+            ? fallback
+            : error.localizedDescription
+
+        if error as? CheckInServiceError == .persistenceUnavailable {
+            return .unavailable(message)
+        }
+
+        return .failed(message)
     }
 }

@@ -77,6 +77,9 @@ struct CheckInView: View {
                 case .saved:
                     Label("Check-in gespeichert", systemImage: "checkmark.circle.fill")
                         .foregroundStyle(.green)
+                case let .unavailable(message):
+                    Label(message, systemImage: "externaldrive.badge.xmark")
+                        .foregroundStyle(.red)
                 case let .failed(message):
                     Label(message, systemImage: "exclamationmark.triangle")
                         .foregroundStyle(.red)

@@ -89,6 +89,23 @@ struct CheckInViewModelTests {
     }
 
     @Test
+    func unavailablePersistenceDisablesSaving() {
+        let service = CheckInServiceSpy(
+            error: CheckInServiceError.persistenceUnavailable
+        )
+        let viewModel = makeViewModel(service: service)
+
+        viewModel.load()
+
+        guard case let .unavailable(message) = viewModel.state else {
+            Issue.record("Der Persistence-Fehler wurde nicht separat dargestellt.")
+            return
+        }
+        #expect(message == "Lokale Check-ins sind derzeit nicht verfügbar.")
+        #expect(!viewModel.canSave)
+    }
+
+    @Test
     func refreshDateKeepsDraftWithinSameCalendarDay() throws {
         let service = CheckInServiceSpy()
         let viewModel = makeViewModel(service: service)

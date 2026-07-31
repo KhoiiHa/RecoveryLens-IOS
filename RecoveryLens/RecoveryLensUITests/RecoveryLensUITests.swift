@@ -102,6 +102,25 @@ final class RecoveryLensUITests: XCTestCase {
     }
 
     @MainActor
+    func testPersistenceFailureKeepsDashboardAvailable() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-demoData", "-persistenceUnavailable"]
+        app.launch()
+
+        XCTAssertTrue(
+            app.staticTexts["Tageswerte"].waitForExistence(timeout: 3)
+        )
+
+        app.tabBars.buttons["Check-in"].tap()
+
+        XCTAssertTrue(
+            app.staticTexts["Lokale Check-ins sind derzeit nicht verfügbar."]
+                .waitForExistence(timeout: 3)
+        )
+        XCTAssertFalse(app.buttons["Check-in speichern"].isEnabled)
+    }
+
+    @MainActor
     func testDemoDataShowsDashboardContent() {
         let app = launch(with: "-demoData")
 

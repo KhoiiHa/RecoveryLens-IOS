@@ -18,6 +18,14 @@ enum CheckInValidationError: Error, Equatable, LocalizedError {
     }
 }
 
+enum CheckInServiceError: Error, Equatable, LocalizedError {
+    case persistenceUnavailable
+
+    var errorDescription: String? {
+        "Lokale Check-ins sind derzeit nicht verfügbar."
+    }
+}
+
 @MainActor
 protocol CheckInService {
     func checkIn(for date: Date) throws -> DailyCheckIn?
@@ -29,6 +37,22 @@ protocol CheckInService {
         moodLevel: Int,
         note: String?
     ) throws -> DailyCheckIn
+}
+
+@MainActor
+struct UnavailableCheckInService: CheckInService {
+    func checkIn(for date: Date) throws -> DailyCheckIn? {
+        throw CheckInServiceError.persistenceUnavailable
+    }
+
+    func save(
+        date: Date,
+        energyLevel: Int,
+        moodLevel: Int,
+        note: String?
+    ) throws -> DailyCheckIn {
+        throw CheckInServiceError.persistenceUnavailable
+    }
 }
 
 @MainActor
