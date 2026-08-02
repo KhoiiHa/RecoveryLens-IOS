@@ -12,9 +12,18 @@ nonisolated enum WeekMetric: String, CaseIterable, Identifiable, Sendable {
         case .steps:
             "Schritte"
         case .activeEnergy:
-            "Energie"
+            "Aktive Energie"
         case .sleep:
             "Schlaf"
+        }
+    }
+
+    var pickerTitle: String {
+        switch self {
+        case .activeEnergy:
+            "Energie"
+        default:
+            title
         }
     }
 

@@ -26,7 +26,7 @@ struct WeekOverviewView: View {
     private var metricPicker: some View {
         Picker("Metrik", selection: $selectedMetric) {
             ForEach(WeekMetric.allCases) { metric in
-                Text(metric.title).tag(metric)
+                Text(metric.pickerTitle).tag(metric)
             }
         }
         .pickerStyle(.segmented)
@@ -71,7 +71,12 @@ struct WeekOverviewView: View {
                 .chartXAxis {
                     AxisMarks(values: content.days.map(\.date)) { _ in
                         AxisTick()
-                        AxisValueLabel(format: .dateTime.weekday(.narrow))
+                        AxisValueLabel(
+                            format: .dateTime
+                                .weekday(.short)
+                                .day()
+                                .locale(Locale(identifier: "de_DE"))
+                        )
                     }
                 }
                 .chartYAxis {

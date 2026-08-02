@@ -4,6 +4,13 @@ import Testing
 
 struct WeekOverviewContentTests {
     @Test
+    func metricTitlesDistinguishCompactPickerText() {
+        #expect(WeekMetric.activeEnergy.title == "Aktive Energie")
+        #expect(WeekMetric.activeEnergy.pickerTitle == "Energie")
+        #expect(WeekMetric.steps.pickerTitle == "Schritte")
+    }
+
+    @Test
     func pointsOmitMissingValuesButPreserveMeasuredZero() throws {
         let firstDate = try date(dayOffset: -2)
         let secondDate = try date(dayOffset: -1)
