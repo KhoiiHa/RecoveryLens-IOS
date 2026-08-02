@@ -84,6 +84,9 @@ struct RecoveryLensApp: App {
         if scenario.usesAccessibilityTextSize {
             debugRootView(for: scenario)
                 .environment(\.dynamicTypeSize, .accessibility5)
+        } else if scenario.usesPortfolioAppearance {
+            debugRootView(for: scenario)
+                .preferredColorScheme(.light)
         } else {
             debugRootView(for: scenario)
         }
@@ -112,6 +115,7 @@ private enum DebugHealthScenario {
     case partialData
     case queryError
     case demoData
+    case portfolioAuthorization
     case portfolioScreenshots
     case accessibilityText
 
@@ -125,6 +129,7 @@ private enum DebugHealthScenario {
             ("-partialData", .partialData),
             ("-queryError", .queryError),
             ("-demoData", .demoData),
+            ("-portfolioAuthorization", .portfolioAuthorization),
             ("-portfolioScreenshots", .portfolioScreenshots),
             ("-accessibilityText", .accessibilityText),
         ]
@@ -140,7 +145,7 @@ private enum DebugHealthScenario {
 
     var healthKitClient: any HealthKitClient {
         switch self {
-        case .authorizationRequired:
+        case .authorizationRequired, .portfolioAuthorization:
             MockHealthKitClient(
                 authorizationStateResult: .success(.shouldRequest)
             )
@@ -171,6 +176,10 @@ private enum DebugHealthScenario {
 
     var usesAccessibilityTextSize: Bool {
         self == .accessibilityText
+    }
+
+    var usesPortfolioAppearance: Bool {
+        self == .portfolioAuthorization || self == .portfolioScreenshots
     }
 }
 

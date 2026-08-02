@@ -31,7 +31,7 @@ DEVELOPER_DIR="$DEVELOPER_DIR" xcrun xcresulttool export attachments \
     --path "$RESULT_BUNDLE" \
     --output-path "$ATTACHMENT_DIR"
 
-for name in 01-dashboard 02-week-overview 03-check-in; do
+for name in 00-authorization 01-dashboard 02-week-overview 03-check-in; do
     source_file_name="$(
         python3 -c '
 import json

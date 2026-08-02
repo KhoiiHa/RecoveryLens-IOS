@@ -141,6 +141,14 @@ final class RecoveryLensUITests: XCTestCase {
 
     @MainActor
     func testCapturePortfolioScreenshots() {
+        let authorizationApp = launch(with: "-portfolioAuthorization")
+        XCTAssertTrue(
+            authorizationApp.buttons["Mit Apple Health verbinden"]
+                .waitForExistence(timeout: 3)
+        )
+        addScreenshot(named: "00-authorization", from: authorizationApp)
+        authorizationApp.terminate()
+
         let app = launch(with: "-portfolioScreenshots")
 
         XCTAssertTrue(

@@ -7,9 +7,11 @@ Diagnosen, Risikoeinschätzungen oder konkreten Gesundheitsempfehlungen.
 
 ## Einblick
 
-| Dashboard | Wochenübersicht | Tages-Check-in |
-| --- | --- | --- |
-| ![Dashboard mit synthetischen Tageswerten](docs/screenshots/01-dashboard.png) | ![Wochenchart und Trainingseinheiten](docs/screenshots/02-week-overview.png) | ![Lokaler Tages-Check-in](docs/screenshots/03-check-in.png) |
+| Freiwillige HealthKit-Freigabe | Dashboard |
+| --- | --- |
+| ![Berechtigungsfluss mit gelesenen HealthKit-Datentypen](docs/screenshots/00-authorization.png) | ![Dashboard mit synthetischen Tageswerten](docs/screenshots/01-dashboard.png) |
+| Wochenübersicht | Tages-Check-in |
+| ![Wochenchart und Trainingseinheiten](docs/screenshots/02-week-overview.png) | ![Lokaler Tages-Check-in](docs/screenshots/03-check-in.png) |
 
 Alle Aufnahmen verwenden reproduzierbare, synthetische Demo-Daten. Es werden
 keine persönlichen HealthKit-Daten im Repository gespeichert.
@@ -130,7 +132,7 @@ gesetzt werden. Weitere DEBUG-Szenarien sind unter anderem `-emptyData`,
 `-partialData`, `-queryError`, `-authorizationRequired` und
 `-healthKitUnavailable`.
 
-Die drei README-Screenshots werden mit einem fokussierten UI-Test erzeugt:
+Die vier README-Screenshots werden mit einem fokussierten UI-Test erzeugt:
 
 ```bash
 ./scripts/capture_portfolio_screenshots.sh
