@@ -16,9 +16,15 @@ final class CheckInViewModel {
     private(set) var state: State = .idle
     private(set) var isExistingCheckIn = false
 
-    var energyLevel = 3
-    var moodLevel = 3
-    var note = ""
+    var energyLevel = 3 {
+        didSet { draftDidChange() }
+    }
+    var moodLevel = 3 {
+        didSet { draftDidChange() }
+    }
+    var note = "" {
+        didSet { draftDidChange() }
+    }
 
     private(set) var date: Date
 
@@ -26,8 +32,8 @@ final class CheckInViewModel {
         (1...5).contains(energyLevel)
             && (1...5).contains(moodLevel)
             && note.count <= SwiftDataCheckInService.maximumNoteLength
-            && state != .loading
-            && !isPersistenceUnavailable
+            && isReadyToSave
+            && (!isExistingCheckIn || hasUnsavedChanges)
     }
 
     var remainingNoteCharacters: Int {
@@ -36,6 +42,7 @@ final class CheckInViewModel {
 
     private let checkInService: any CheckInService
     private let calendar: Calendar
+    private var savedDraft: Draft?
 
     init(
         checkInService: any CheckInService,
@@ -61,6 +68,7 @@ final class CheckInViewModel {
             moodLevel = checkIn.moodLevel
             note = checkIn.note ?? ""
             isExistingCheckIn = true
+            savedDraft = currentDraft
             state = .ready
         } catch {
             state = failureState(
@@ -89,6 +97,7 @@ final class CheckInViewModel {
             moodLevel = savedCheckIn.moodLevel
             note = savedCheckIn.note ?? ""
             isExistingCheckIn = true
+            savedDraft = currentDraft
             state = .saved
         } catch {
             state = failureState(
@@ -108,16 +117,38 @@ final class CheckInViewModel {
         moodLevel = 3
         note = ""
         isExistingCheckIn = false
+        savedDraft = nil
         state = .idle
         load()
     }
 
-    private var isPersistenceUnavailable: Bool {
-        guard case .unavailable = state else {
-            return false
+    private var isReadyToSave: Bool {
+        switch state {
+        case .ready, .saved:
+            true
+        default:
+            false
+        }
+    }
+
+    private var hasUnsavedChanges: Bool {
+        savedDraft != currentDraft
+    }
+
+    private var currentDraft: Draft {
+        Draft(
+            energyLevel: energyLevel,
+            moodLevel: moodLevel,
+            note: note
+        )
+    }
+
+    private func draftDidChange() {
+        guard state == .saved, hasUnsavedChanges else {
+            return
         }
 
-        return true
+        state = .ready
     }
 
     private func failureState(for error: Error, fallback: String) -> State {
@@ -131,4 +162,10 @@ final class CheckInViewModel {
 
         return .failed(message)
     }
+}
+
+private struct Draft: Equatable {
+    let energyLevel: Int
+    let moodLevel: Int
+    let note: String
 }

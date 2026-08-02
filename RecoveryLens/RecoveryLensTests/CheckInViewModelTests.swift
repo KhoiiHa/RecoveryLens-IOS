@@ -42,6 +42,7 @@ struct CheckInViewModelTests {
     func saveForwardsValuesAndMarksCheckInAsSaved() throws {
         let service = CheckInServiceSpy()
         let viewModel = makeViewModel(service: service)
+        viewModel.load()
         viewModel.energyLevel = 5
         viewModel.moodLevel = 4
         viewModel.note = "  Fokus  "
@@ -61,6 +62,7 @@ struct CheckInViewModelTests {
     func invalidDraftDoesNotReachService() {
         let service = CheckInServiceSpy()
         let viewModel = makeViewModel(service: service)
+        viewModel.load()
         viewModel.note = String(
             repeating: "a",
             count: SwiftDataCheckInService.maximumNoteLength + 1
@@ -77,11 +79,17 @@ struct CheckInViewModelTests {
 
     @Test
     func serviceErrorsRemainVisible() {
-        let service = CheckInServiceSpy(error: CheckInTestError.failed)
-        let loadViewModel = makeViewModel(service: service)
-        let saveViewModel = makeViewModel(service: service)
+        let loadService = CheckInServiceSpy(
+            checkInError: CheckInTestError.failed
+        )
+        let saveService = CheckInServiceSpy(
+            saveError: CheckInTestError.failed
+        )
+        let loadViewModel = makeViewModel(service: loadService)
+        let saveViewModel = makeViewModel(service: saveService)
 
         loadViewModel.load()
+        saveViewModel.load()
         saveViewModel.save()
 
         assertFailure(loadViewModel.state, message: "Testfehler")
@@ -103,6 +111,46 @@ struct CheckInViewModelTests {
         }
         #expect(message == "Lokale Check-ins sind derzeit nicht verfügbar.")
         #expect(!viewModel.canSave)
+    }
+
+    @Test
+    func savingRequiresSuccessfulLoad() {
+        let idleViewModel = makeViewModel(service: CheckInServiceSpy())
+        let failedViewModel = makeViewModel(
+            service: CheckInServiceSpy(
+                checkInError: CheckInTestError.failed
+            )
+        )
+
+        failedViewModel.load()
+
+        #expect(!idleViewModel.canSave)
+        #expect(!failedViewModel.canSave)
+    }
+
+    @Test
+    func existingCheckInOnlySavesActualChanges() {
+        let existingCheckIn = makeCheckIn(
+            energyLevel: 2,
+            moodLevel: 4,
+            note: "Notiz"
+        )
+        let service = CheckInServiceSpy(checkInResult: existingCheckIn)
+        let viewModel = makeViewModel(service: service)
+
+        viewModel.load()
+        #expect(!viewModel.canSave)
+
+        viewModel.energyLevel = 5
+        #expect(viewModel.canSave)
+
+        viewModel.save()
+        #expect(viewModel.state == .saved)
+        #expect(!viewModel.canSave)
+
+        viewModel.note = "Neue Notiz"
+        #expect(viewModel.state == .ready)
+        #expect(viewModel.canSave)
     }
 
     @Test
@@ -203,24 +251,28 @@ private final class CheckInServiceSpy: CheckInService {
     }
 
     private let checkInResult: DailyCheckIn?
-    private let error: Error?
+    private let checkInError: Error?
+    private let saveError: Error?
 
     private(set) var requestedDates: [Date] = []
     private(set) var saveRequests: [SaveRequest] = []
 
     init(
         checkInResult: DailyCheckIn? = nil,
-        error: Error? = nil
+        error: Error? = nil,
+        checkInError: Error? = nil,
+        saveError: Error? = nil
     ) {
         self.checkInResult = checkInResult
-        self.error = error
+        self.checkInError = checkInError ?? error
+        self.saveError = saveError ?? error
     }
 
     func checkIn(for date: Date) throws -> DailyCheckIn? {
         requestedDates.append(date)
 
-        if let error {
-            throw error
+        if let checkInError {
+            throw checkInError
         }
 
         return checkInResult
@@ -241,8 +293,8 @@ private final class CheckInServiceSpy: CheckInService {
             )
         )
 
-        if let error {
-            throw error
+        if let saveError {
+            throw saveError
         }
 
         return DailyCheckIn(
