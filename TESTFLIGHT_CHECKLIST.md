@@ -10,7 +10,7 @@ benötigen.
 - Build: `1`
 - Bundle Identifier: `de.KhoiiHa.RecoveryLens`
 - Plattform: iPhone
-- Deployment Target: iOS 26.5
+- Deployment Target: iOS 26.0
 - Signierung: automatisch
 
 Jeder erneute Upload benötigt eine höhere Build-Nummer. Die Marketing-Version

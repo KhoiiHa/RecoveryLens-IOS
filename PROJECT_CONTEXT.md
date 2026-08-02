@@ -296,7 +296,7 @@ Umfangserweiterungen benötigen eine separate Freigabe.
 
 - SwiftUI-App mit App-, Unit-Test- und UI-Test-Target
 - umgesetzte MVVM-Struktur mit HealthKit-Client und SwiftData-Check-in-Service
-- iOS Deployment Target 26.5
+- iOS Deployment Target 26.0
 - Swift 5 Build-Einstellung
 - keine Drittanbieter-Abhängigkeiten
 

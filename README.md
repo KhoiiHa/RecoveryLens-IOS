@@ -89,7 +89,7 @@ Weitere Entscheidungen und Trade-offs stehen in der
 ## Voraussetzungen
 
 - Xcode 26.5 oder kompatible neuere Version
-- iOS 26.5 Deployment Target
+- iOS 26.0 Deployment Target
 - iPhone als unterstützte Gerätefamilie; iPad ist im MVP nicht vorgesehen
 - Apple-Developer-Team für einen Lauf auf einem realen iPhone
 - HealthKit-Capability und bestehender Purpose String im App-Target
