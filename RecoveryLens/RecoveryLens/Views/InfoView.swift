@@ -65,7 +65,7 @@ struct InfoView: View {
 
             InfoRow(
                 title: "Eigene Check-ins",
-                detail: "Bleiben lokal auf diesem Gerät, bis die App entfernt wird. Ein Eintrag kann für denselben Tag überschrieben werden.",
+                detail: "RecoveryLens speichert sie lokal im App-Container und synchronisiert sie nicht selbst. Abhängig von deinen iOS-Einstellungen können sie Bestandteil eines Systembackups sein.",
                 systemImage: "iphone",
                 tint: .indigo
             )

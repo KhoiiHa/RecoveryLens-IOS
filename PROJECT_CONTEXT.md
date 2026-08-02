@@ -205,6 +205,8 @@ beobachtbare Zustände.
 - HealthKit-Daten werden nicht in SwiftData gespiegelt.
 - Persistiert werden nur manuell eingegebene Check-ins.
 - Es gibt keine externe Übertragung, Analytik, Werbung oder Profilbildung.
+- RecoveryLens betreibt keine eigene Cloud-Synchronisierung; mögliche
+  Systembackups des App-Containers werden transparent davon unterschieden.
 - Purpose Strings benennen Zweck und Umfang in verständlicher Sprache.
 - Logs dürfen keine sensiblen Gesundheitswerte oder Check-in-Notizen enthalten.
 - Demo-Daten sind synthetisch und eindeutig als Demo-Daten erkennbar.

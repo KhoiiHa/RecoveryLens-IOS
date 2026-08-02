@@ -51,6 +51,10 @@ Energie, Schlafanalyse und Trainingseinheiten an. HealthKit-Daten werden für
 die aktuelle Darstellung verarbeitet, nicht in SwiftData kopiert und nicht
 übertragen. Lokal gespeichert werden nur manuelle Check-ins.
 
+RecoveryLens betreibt dafür keine eigene Cloud-Synchronisierung. Abhängig von
+den iOS-Einstellungen können lokale App-Daten dennoch Bestandteil eines vom
+System verwalteten Gerätebackups sein.
+
 Das MVP enthält kein Konto, keine Cloud-Synchronisierung, keine Analytik, keine
 Werbung und keine Drittanbieter-SDKs. Apple teilt Apps nicht zuverlässig mit,
 ob Lesezugriff verweigert wurde. Ein leeres Ergebnis wird deshalb nicht als

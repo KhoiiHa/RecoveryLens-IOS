@@ -22,14 +22,18 @@ eigene SwiftData-Datenbank und überträgt sie nicht an den Entwickler oder
 Dritte.
 
 Zusätzlich kannst du freiwillig einen täglichen Check-in mit
-Energieempfinden, Stimmung und einer optionalen Notiz speichern. Diese
-Check-ins bleiben ausschließlich lokal in der App auf deinem Gerät.
+Energieempfinden, Stimmung und einer optionalen Notiz speichern. RecoveryLens
+speichert diese Check-ins lokal im geschützten App-Container und betreibt dafür
+keine eigene Übertragung oder Cloud-Synchronisierung.
 
 ## Speicherung und Löschung
 
 HealthKit-Daten werden von RecoveryLens nicht dauerhaft gespeichert. Lokale
-Check-ins bleiben erhalten, bis du die App entfernst; ein erneuter Check-in am
-selben Kalendertag überschreibt den vorhandenen Eintrag.
+Check-ins bleiben in der App erhalten, bis du sie durch Entfernen der App
+löschst; ein erneuter Check-in am selben Kalendertag überschreibt den
+vorhandenen Eintrag. Abhängig von deinen iOS- und Backup-Einstellungen können
+App-Daten Bestandteil eines verschlüsselten Geräte- oder iCloud-Backups sein.
+RecoveryLens steuert oder betreibt diese Systembackups nicht.
 
 Die Freigabe einzelner HealthKit-Datentypen kannst du jederzeit in Apple Health
 oder den iOS-Systemeinstellungen ändern.
@@ -52,6 +56,9 @@ Entwickler oder an Dritte übertragen.
 Apple verarbeitet Daten im Zusammenhang mit Apple Health, dem App Store und
 dem Betriebssystem nach den eigenen Datenschutzbestimmungen. RecoveryLens hat
 keinen Zugriff auf Daten, die Apple unabhängig von der App verarbeitet.
+
+Weitere Informationen zu iCloud-Backups stellt Apple in der
+[iCloud-Datensicherheit](https://support.apple.com/de-de/102651) bereit.
 
 ## Änderungen
 
