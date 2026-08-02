@@ -141,7 +141,7 @@ struct CheckInView: View {
         Section {
             Label {
                 Text(
-                    "Der Check-in dient nur deiner persönlichen Reflexion und ist keine medizinische Bewertung."
+                    "Nur zur persönlichen Reflexion, keine medizinische Bewertung."
                 )
             } icon: {
                 Image(systemName: "info.circle")
@@ -155,18 +155,34 @@ struct CheckInView: View {
         Button {
             viewModel.save()
         } label: {
-            Label(
-                viewModel.isExistingCheckIn
-                    ? "Änderungen speichern"
-                    : "Check-in speichern",
-                systemImage: "checkmark"
-            )
-            .frame(maxWidth: .infinity)
-            .fixedSize(horizontal: false, vertical: true)
+            saveButtonLabel
         }
+        .accessibilityLabel(saveButtonTitle)
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
         .disabled(!viewModel.canSave)
+    }
+
+    @ViewBuilder
+    private var saveButtonLabel: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            Image(systemName: "checkmark")
+                .frame(maxWidth: .infinity)
+        } else {
+            Label(saveButtonTitle, systemImage: "checkmark")
+                .frame(maxWidth: .infinity)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private var saveButtonTitle: String {
+        if dynamicTypeSize.isAccessibilitySize {
+            return "Speichern"
+        }
+
+        return viewModel.isExistingCheckIn
+            ? "Änderungen speichern"
+            : "Check-in speichern"
     }
 
     private var pinnedSaveButton: some View {

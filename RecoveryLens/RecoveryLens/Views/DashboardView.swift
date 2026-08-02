@@ -95,44 +95,58 @@ struct DashboardView: View {
             Text("Tageswerte")
                 .font(.headline)
 
-            LazyVGrid(columns: columns, spacing: 12) {
-                MetricCard(
-                    title: "Schritte",
-                    value: formattedSteps,
-                    detail: content.today.steps == nil ? "Keine Daten" : nil,
-                    systemImage: "figure.walk",
-                    tint: .blue
-                )
-                MetricCard(
-                    title: "Aktive Energie",
-                    value: formattedEnergy,
-                    detail: content.today.activeEnergyKilocalories == nil
-                        ? "Keine Daten"
-                        : "kcal",
-                    systemImage: "flame.fill",
-                    tint: .orange
-                )
-                MetricCard(
-                    title: "Schlaf",
-                    value: formattedSleep,
-                    detail: content.today.sleepMinutes == nil
-                        ? "Keine Daten"
-                        : "Std.:Min.",
-                    systemImage: "bed.double.fill",
-                    tint: .indigo
-                )
+            if dynamicTypeSize.isAccessibilitySize {
+                VStack(spacing: 12) {
+                    stepsCard
+                    energyCard
+                    sleepCard
+                }
+            } else {
+                Grid(horizontalSpacing: 12, verticalSpacing: 12) {
+                    GridRow {
+                        stepsCard
+                        energyCard
+                    }
+
+                    sleepCard
+                        .gridCellColumns(2)
+                }
             }
         }
     }
 
-    private var columns: [GridItem] {
-        if dynamicTypeSize.isAccessibilitySize {
-            return [GridItem(.flexible())]
-        }
+    private var stepsCard: some View {
+        MetricCard(
+            title: "Schritte",
+            value: formattedSteps,
+            detail: content.today.steps == nil ? "Keine Daten" : nil,
+            systemImage: "figure.walk",
+            tint: .blue
+        )
+    }
 
-        return [
-            GridItem(.adaptive(minimum: 104, maximum: 180), spacing: 12),
-        ]
+    private var energyCard: some View {
+        MetricCard(
+            title: "Aktive Energie",
+            value: formattedEnergy,
+            detail: content.today.activeEnergyKilocalories == nil
+                ? "Keine Daten"
+                : "kcal",
+            systemImage: "flame.fill",
+            tint: .orange
+        )
+    }
+
+    private var sleepCard: some View {
+        MetricCard(
+            title: "Schlaf",
+            value: formattedSleep,
+            detail: content.today.sleepMinutes == nil
+                ? "Keine Daten"
+                : "Stunden",
+            systemImage: "bed.double.fill",
+            tint: .indigo
+        )
     }
 
     private var weekSection: some View {

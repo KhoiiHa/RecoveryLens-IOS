@@ -197,7 +197,7 @@ final class RecoveryLensUITests: XCTestCase {
             app.navigationBars["Check-in"].waitForExistence(timeout: 3)
         )
 
-        let saveButton = app.buttons["Check-in speichern"]
+        let saveButton = app.buttons["Speichern"]
         scrollUntilHittable(saveButton, in: app)
         XCTAssertTrue(saveButton.isHittable)
         addScreenshot(named: "accessibility-check-in", from: app)
