@@ -177,6 +177,24 @@ struct DashboardViewModelTests {
         #expect(client.fetchRanges.isEmpty)
     }
 
+    @Test
+    func refreshReloadsVisibleDashboardContent() async {
+        let client = DashboardHealthKitSpy(snapshot: DemoData.snapshot)
+        let viewModel = makeViewModel(client: client)
+
+        await viewModel.load()
+        client.snapshot = DemoData.partialSnapshot
+        await viewModel.refresh()
+
+        #expect(client.fetchRanges.count == 2)
+        guard case let .partial(content) = viewModel.state else {
+            Issue.record("Die aktualisierten Teildaten wurden nicht dargestellt.")
+            return
+        }
+        #expect(content.today.steps == 3_250)
+        #expect(!viewModel.isRefreshing)
+    }
+
     private func makeViewModel(
         client: DashboardHealthKitSpy
     ) -> DashboardViewModel {
@@ -210,7 +228,7 @@ private final class DashboardHealthKitSpy: HealthKitClient {
     let authorizationStateValue: HealthKitAuthorizationState
     let authorizationStateError: HealthKitClientError?
     let authorizationRequestError: HealthKitClientError?
-    let snapshot: HealthDataSnapshot
+    var snapshot: HealthDataSnapshot
     let snapshotError: HealthKitClientError?
 
     private(set) var authorizationRequestCount = 0

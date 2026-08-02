@@ -17,11 +17,13 @@ final class DashboardViewModel {
     }
 
     private(set) var state: State = .idle
+    private(set) var isRefreshing = false
 
     private let healthKitClient: any HealthKitClient
     private let aggregator: HealthSummaryAggregator
     private let calendar: Calendar
     private let now: () -> Date
+    private var isLoading = false
 
     init(
         healthKitClient: any HealthKitClient,
@@ -35,7 +37,27 @@ final class DashboardViewModel {
     }
 
     func load() async {
-        state = .loading
+        await performLoad(showsLoadingState: true)
+    }
+
+    func refresh() async {
+        await performLoad(showsLoadingState: !hasVisibleContent)
+    }
+
+    private func performLoad(showsLoadingState: Bool) async {
+        guard !isLoading else {
+            return
+        }
+
+        isLoading = true
+        isRefreshing = !showsLoadingState
+        if showsLoadingState {
+            state = .loading
+        }
+        defer {
+            isLoading = false
+            isRefreshing = false
+        }
 
         let authorizationState: HealthKitAuthorizationState
 
@@ -67,7 +89,16 @@ final class DashboardViewModel {
     }
 
     func requestAuthorization() async {
+        guard !isLoading else {
+            return
+        }
+
+        isLoading = true
         state = .loading
+        defer {
+            isLoading = false
+            isRefreshing = false
+        }
 
         do {
             try await healthKitClient.requestAuthorization()
@@ -85,6 +116,15 @@ final class DashboardViewModel {
         }
 
         await loadHealthData()
+    }
+
+    private var hasVisibleContent: Bool {
+        switch state {
+        case .partial, .loaded:
+            true
+        default:
+            false
+        }
     }
 
     private func loadHealthData() async {

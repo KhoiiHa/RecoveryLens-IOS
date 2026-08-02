@@ -67,6 +67,9 @@ struct ContentView: View {
             }
 
             checkInViewModel.refreshDateIfNeeded(now())
+            Task {
+                await dashboardViewModel.refresh()
+            }
         }
         .task {
             for await _ in NotificationCenter.default.notifications(
@@ -77,6 +80,7 @@ struct ContentView: View {
                 }
 
                 checkInViewModel.refreshDateIfNeeded(now())
+                await dashboardViewModel.refresh()
             }
         }
     }
@@ -115,13 +119,15 @@ struct ContentView: View {
             DashboardView(
                 content: content,
                 showsMissingDataNotice: true,
-                onRefresh: dashboardViewModel.load
+                isRefreshing: dashboardViewModel.isRefreshing,
+                onRefresh: dashboardViewModel.refresh
             )
         case let .loaded(content):
             DashboardView(
                 content: content,
                 showsMissingDataNotice: false,
-                onRefresh: dashboardViewModel.load
+                isRefreshing: dashboardViewModel.isRefreshing,
+                onRefresh: dashboardViewModel.refresh
             )
         case let .failed(error):
             statusView(

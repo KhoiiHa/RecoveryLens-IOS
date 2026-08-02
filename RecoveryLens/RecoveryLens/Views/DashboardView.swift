@@ -3,6 +3,7 @@ import SwiftUI
 struct DashboardView: View {
     let content: DashboardContent
     let showsMissingDataNotice: Bool
+    let isRefreshing: Bool
     let onRefresh: () async -> Void
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -34,14 +35,19 @@ struct DashboardView: View {
         )
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    Task {
-                        await onRefresh()
+                if isRefreshing {
+                    ProgressView()
+                        .accessibilityLabel("Health-Daten werden aktualisiert")
+                } else {
+                    Button {
+                        Task {
+                            await onRefresh()
+                        }
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
                     }
-                } label: {
-                    Image(systemName: "arrow.clockwise")
+                    .accessibilityLabel("Health-Daten aktualisieren")
                 }
-                .accessibilityLabel("Health-Daten aktualisieren")
             }
         }
         .refreshable {
@@ -297,6 +303,7 @@ private struct MetricCard: View {
                     week: DemoData.summaries
                 ),
                 showsMissingDataNotice: false,
+                isRefreshing: false,
                 onRefresh: {}
             )
         }
