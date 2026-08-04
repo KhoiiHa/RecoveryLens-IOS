@@ -19,9 +19,9 @@ struct DashboardView: View {
                 }
 
                 todaySection
+                medicalNotice
                 weekSection
                 trendsSection
-                medicalNotice
             }
             .padding(.horizontal, 16)
             .padding(.bottom, 32)
