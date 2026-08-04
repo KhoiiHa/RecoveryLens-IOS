@@ -156,7 +156,8 @@ final class DashboardViewModel {
         do {
             let snapshot = try await healthKitClient.fetchSnapshot(
                 from: startDate,
-                to: endDate
+                to: endDate,
+                scope: .dashboard
             )
             let summaries = aggregator.summaries(
                 from: snapshot,

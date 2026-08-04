@@ -40,7 +40,8 @@ struct HealthKitClientTests {
         await expectError(.healthDataUnavailable) {
             _ = try await client.fetchSnapshot(
                 from: Date(timeIntervalSinceReferenceDate: 0),
-                to: Date(timeIntervalSinceReferenceDate: 1)
+                to: Date(timeIntervalSinceReferenceDate: 1),
+                scope: .dashboard
             )
         }
     }
@@ -53,7 +54,11 @@ struct HealthKitClientTests {
         let date = Date(timeIntervalSinceReferenceDate: 100)
 
         await expectError(.invalidDateRange) {
-            _ = try await client.fetchSnapshot(from: date, to: date)
+            _ = try await client.fetchSnapshot(
+                from: date,
+                to: date,
+                scope: .dashboard
+            )
         }
     }
 
@@ -68,7 +73,8 @@ struct HealthKitClientTests {
         try await client.requestAuthorization()
         let snapshot = try await client.fetchSnapshot(
             from: DemoData.referenceDate.addingTimeInterval(-604_800),
-            to: DemoData.referenceDate
+            to: DemoData.referenceDate,
+            scope: .dashboard
         )
 
         #expect(state == .shouldRequest)
@@ -78,6 +84,27 @@ struct HealthKitClientTests {
                 == DemoData.snapshot.stepSamples.last?.value
         )
         #expect(snapshot.workouts.count == DemoData.snapshot.workouts.count)
+    }
+
+    @Test
+    func trendScopeOmitsWorkoutsButKeepsRequiredMetrics() async throws {
+        let client = MockHealthKitClient(
+            snapshotResult: .success(DemoData.snapshot)
+        )
+
+        let snapshot = try await client.fetchSnapshot(
+            from: DemoData.referenceDate.addingTimeInterval(-2_592_000),
+            to: DemoData.referenceDate,
+            scope: .trends
+        )
+
+        #expect(snapshot.stepSamples.count == DemoData.snapshot.stepSamples.count)
+        #expect(
+            snapshot.activeEnergySamples.count
+                == DemoData.snapshot.activeEnergySamples.count
+        )
+        #expect(snapshot.sleepSamples.count == DemoData.snapshot.sleepSamples.count)
+        #expect(snapshot.workouts.isEmpty)
     }
 
     @Test
@@ -101,7 +128,8 @@ struct HealthKitClientTests {
         await expectError(.queryFailed) {
             _ = try await client.fetchSnapshot(
                 from: Date(timeIntervalSinceReferenceDate: 0),
-                to: Date(timeIntervalSinceReferenceDate: 1)
+                to: Date(timeIntervalSinceReferenceDate: 1),
+                scope: .dashboard
             )
         }
     }

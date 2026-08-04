@@ -53,7 +53,8 @@ struct LiveHealthKitClient: HealthKitClient {
 
     func fetchSnapshot(
         from startDate: Date,
-        to endDate: Date
+        to endDate: Date,
+        scope: HealthDataQueryScope
     ) async throws -> HealthDataSnapshot {
         guard isHealthDataAvailable() else {
             throw HealthKitClientError.healthDataUnavailable
@@ -79,7 +80,11 @@ struct LiveHealthKitClient: HealthKitClient {
                 from: startDate,
                 to: endDate
             )
-            async let workouts = workouts(from: startDate, to: endDate)
+            async let workouts = workouts(
+                from: startDate,
+                to: endDate,
+                scope: scope
+            )
 
             return try await HealthDataSnapshot(
                 stepSamples: stepSamples,
@@ -258,8 +263,13 @@ struct LiveHealthKitClient: HealthKitClient {
 
     private func workouts(
         from startDate: Date,
-        to endDate: Date
+        to endDate: Date,
+        scope: HealthDataQueryScope
     ) async throws -> [WorkoutSummary] {
+        guard scope.includesWorkouts else {
+            return []
+        }
+
         let datePredicate = HKQuery.predicateForSamples(
             withStart: startDate,
             end: endDate,

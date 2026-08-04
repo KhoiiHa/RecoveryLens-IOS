@@ -63,6 +63,7 @@ struct TrendsViewModelTests {
         #expect(content.points(for: .steps).count == 30)
         #expect(healthRange.start == expectedHealthStart)
         #expect(healthRange.end == expectedEnd)
+        #expect(healthRange.scope == .trends)
         #expect(checkInRange.start == expectedFirstDay)
         #expect(checkInRange.end == expectedEnd)
     }
@@ -145,6 +146,7 @@ private final class TrendsHealthKitSpy: HealthKitClient {
     struct FetchRange {
         let start: Date
         let end: Date
+        let scope: HealthDataQueryScope
     }
 
     let authorizationStateValue: HealthKitAuthorizationState
@@ -170,9 +172,12 @@ private final class TrendsHealthKitSpy: HealthKitClient {
 
     func fetchSnapshot(
         from startDate: Date,
-        to endDate: Date
+        to endDate: Date,
+        scope: HealthDataQueryScope
     ) async throws -> HealthDataSnapshot {
-        fetchRanges.append(FetchRange(start: startDate, end: endDate))
+        fetchRanges.append(
+            FetchRange(start: startDate, end: endDate, scope: scope)
+        )
         if let snapshotError {
             throw snapshotError
         }

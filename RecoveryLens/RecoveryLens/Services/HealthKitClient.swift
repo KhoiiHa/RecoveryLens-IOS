@@ -7,6 +7,15 @@ nonisolated enum HealthKitAuthorizationState: Equatable, Sendable {
     case unknown
 }
 
+nonisolated enum HealthDataQueryScope: Equatable, Sendable {
+    case dashboard
+    case trends
+
+    var includesWorkouts: Bool {
+        self == .dashboard
+    }
+}
+
 nonisolated enum HealthKitClientError: Error, Equatable, LocalizedError, Sendable {
     case healthDataUnavailable
     case authorizationStatusUnavailable
@@ -33,6 +42,10 @@ nonisolated enum HealthKitClientError: Error, Equatable, LocalizedError, Sendabl
 protocol HealthKitClient: Sendable {
     func authorizationState() async throws -> HealthKitAuthorizationState
     func requestAuthorization() async throws
-    func fetchSnapshot(from startDate: Date, to endDate: Date) async throws
+    func fetchSnapshot(
+        from startDate: Date,
+        to endDate: Date,
+        scope: HealthDataQueryScope
+    ) async throws
         -> HealthDataSnapshot
 }

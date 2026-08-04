@@ -89,6 +89,7 @@ struct DashboardViewModelTests {
 
         #expect(range.start == expectedStart)
         #expect(range.end == expectedEnd)
+        #expect(range.scope == .dashboard)
     }
 
     @Test
@@ -223,6 +224,7 @@ private final class DashboardHealthKitSpy: HealthKitClient {
     struct FetchRange {
         let start: Date
         let end: Date
+        let scope: HealthDataQueryScope
     }
 
     let authorizationStateValue: HealthKitAuthorizationState
@@ -266,9 +268,12 @@ private final class DashboardHealthKitSpy: HealthKitClient {
 
     func fetchSnapshot(
         from startDate: Date,
-        to endDate: Date
+        to endDate: Date,
+        scope: HealthDataQueryScope
     ) async throws -> HealthDataSnapshot {
-        fetchRanges.append(FetchRange(start: startDate, end: endDate))
+        fetchRanges.append(
+            FetchRange(start: startDate, end: endDate, scope: scope)
+        )
 
         if let snapshotError {
             throw snapshotError

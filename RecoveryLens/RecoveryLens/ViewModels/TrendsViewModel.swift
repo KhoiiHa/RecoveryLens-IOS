@@ -105,7 +105,8 @@ final class TrendsViewModel {
         do {
             snapshot = try await healthKitClient.fetchSnapshot(
                 from: healthStart,
-                to: rangeEnd
+                to: rangeEnd,
+                scope: .trends
             )
         } catch is CancellationError {
             state = .idle

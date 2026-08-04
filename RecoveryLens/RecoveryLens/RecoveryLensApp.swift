@@ -208,7 +208,8 @@ private struct DebugLoadingHealthKitClient: HealthKitClient {
 
     func fetchSnapshot(
         from startDate: Date,
-        to endDate: Date
+        to endDate: Date,
+        scope: HealthDataQueryScope
     ) async throws -> HealthDataSnapshot {
         .empty
     }

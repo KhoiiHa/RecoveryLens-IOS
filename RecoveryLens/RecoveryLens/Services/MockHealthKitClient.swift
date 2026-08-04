@@ -37,8 +37,19 @@ struct MockHealthKitClient: HealthKitClient {
 
     func fetchSnapshot(
         from startDate: Date,
-        to endDate: Date
+        to endDate: Date,
+        scope: HealthDataQueryScope
     ) async throws -> HealthDataSnapshot {
-        try snapshotResult.get()
+        let snapshot = try snapshotResult.get()
+        guard scope.includesWorkouts else {
+            return HealthDataSnapshot(
+                stepSamples: snapshot.stepSamples,
+                activeEnergySamples: snapshot.activeEnergySamples,
+                sleepSamples: snapshot.sleepSamples,
+                workouts: []
+            )
+        }
+
+        return snapshot
     }
 }
