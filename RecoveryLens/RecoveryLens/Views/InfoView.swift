@@ -23,8 +23,9 @@ struct InfoView: View {
                     .foregroundStyle(.green)
                     .accessibilityHidden(true)
 
-                Text("RecoveryLens MVP 0.1")
+                Text("RecoveryLens 0.2")
                     .font(.title2.bold())
+                    .accessibilityIdentifier("app-version-summary")
 
                 Text(
                     "RecoveryLens fasst ausgewählte Aktivitätsdaten zur persönlichen Reflexion zusammen."
@@ -83,14 +84,14 @@ struct InfoView: View {
         Section("Berechtigungen") {
             InfoRow(
                 title: "Deine Entscheidung",
-                detail: "Die Freigabe ist freiwillig und für jede Datenart einzeln wählbar. Änderungen sind später in Apple Health oder den Systemeinstellungen möglich.",
+                detail: "Die Freigabe ist freiwillig und für jede Datenart einzeln wählbar. Apple Health kann zusätzlich einen begrenzten historischen Zeitraum anbieten. Änderungen sind später in Apple Health oder den Systemeinstellungen möglich.",
                 systemImage: "hand.raised.fill",
                 tint: .blue
             )
 
             InfoRow(
                 title: "Nicht eindeutig erkennbar",
-                detail: "Apple Health teilt Apps nicht mit, ob Lesezugriff verweigert wurde. Fehlende Werte können daher auch fehlende Messungen bedeuten.",
+                detail: "Apple Health teilt Apps nicht mit, ob Lesezugriff verweigert wurde. Fehlende Werte können daher aus fehlenden Messungen, verweigerten Datenarten oder einem begrenzten historischen Zeitraum entstehen.",
                 systemImage: "questionmark.circle.fill",
                 tint: .orange
             )
@@ -121,9 +122,17 @@ struct InfoView: View {
             )
 
             InfoRow(
-                title: "Begrenzter Zeitraum",
-                detail: "Das MVP betrachtet ausschließlich die letzten sieben Kalendertage einschließlich heute.",
+                title: "Begrenzte Zeiträume",
+                detail: "Dashboard und Wochenübersicht betrachten sieben Kalendertage. Die Reflexionsansicht betrachtet höchstens 30 Kalendertage einschließlich heute.",
                 systemImage: "calendar",
+                tint: .teal
+            )
+            .accessibilityIdentifier("health-data-periods")
+
+            InfoRow(
+                title: "Keine Kausalität",
+                detail: "Die Gegenüberstellung mit dem Energieempfinden zeigt nur Werte desselben Tages. Sie belegt keine Ursache oder Wirkung.",
+                systemImage: "circle.grid.cross",
                 tint: .teal
             )
         }

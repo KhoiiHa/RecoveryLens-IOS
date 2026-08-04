@@ -41,6 +41,9 @@ final class RecoveryLensUITests: XCTestCase {
         )
         XCTAssertTrue(app.staticTexts["Datenquellen"].exists)
         XCTAssertTrue(app.staticTexts["Speicherung und Weitergabe"].exists)
+        let versionSummary = app.staticTexts["app-version-summary"]
+        XCTAssertTrue(versionSummary.exists)
+        XCTAssertEqual(versionSummary.label, "RecoveryLens 0.2")
 
         app.swipeUp()
 
@@ -57,6 +60,13 @@ final class RecoveryLensUITests: XCTestCase {
         let sleepBoundary = app.staticTexts["Schlafdauer"]
         scrollUntilHittable(sleepBoundary, in: app)
         XCTAssertTrue(sleepBoundary.isHittable)
+
+        let periodBoundary = app.descendants(matching: .any)[
+            "health-data-periods"
+        ]
+        scrollUntilHittable(periodBoundary, in: app)
+        XCTAssertTrue(periodBoundary.isHittable)
+        XCTAssertTrue(periodBoundary.label.contains("30 Kalendertage"))
 
         let privacyPolicyLink = app.descendants(matching: .any)[
             "privacy-policy-link"

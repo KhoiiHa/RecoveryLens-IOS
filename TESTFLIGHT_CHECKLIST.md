@@ -26,7 +26,7 @@ bleibt für weitere Builds dieses Umfangs bei `0.2.0`.
 - [x] Keine eigene oder nicht ausgenommene Verschlüsselung
 - [x] Reproduzierbare Demo-Daten und Portfolio-Screenshots sind vorhanden
 - [x] Screenshots liegen im akzeptierten 6,9-Zoll-iPhone-Format vor
-- [x] 61 Unit- und UI-Tests (64 Ausführungen) sind auf iOS 26.4.1 grün
+- [x] 62 Unit- und UI-Tests (65 Ausführungen) sind auf iOS 26.4.1 grün
 - [x] Xcode 26.6 und iOS-26-SDK erfüllen die Upload-Anforderung ab April 2026
 
 Ein unsigniertes Archive belegt nur die lokale Release-Baubarkeit. Es ist kein

@@ -85,7 +85,7 @@ struct HealthAuthorizationView: View {
     private var privacyNotice: some View {
         Label {
             Text(
-                "Die Freigabe ist freiwillig und später in Apple Health oder den Systemeinstellungen änderbar. Health-Daten werden nicht dauerhaft gespeichert oder übertragen."
+                "Die Freigabe ist freiwillig und später in Apple Health oder den Systemeinstellungen änderbar. Apple Health kann den Zugriff zusätzlich auf einen historischen Zeitraum begrenzen. Health-Daten werden nicht dauerhaft gespeichert oder übertragen."
             )
             .fixedSize(horizontal: false, vertical: true)
         } icon: {

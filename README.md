@@ -45,6 +45,7 @@ Die App verwendet eine kleine MVVM-Struktur ohne Drittanbieter-Abhängigkeiten:
 - **Views** rendern Zustand und leiten Aktionen an ViewModels weiter.
 - **ViewModels** koordinieren Autorisierung, Laden und Präsentationszustände.
 - **HealthKitClient** kapselt HealthKit hinter einem testbaren Protokoll.
+- **HealthDataQueryScope** verhindert unnötige Workout-Abfragen für Trends.
 - **HealthSummaryAggregator** bündelt reine Kalender- und Aggregationslogik.
 - **TrendContent** berechnet Median, Abdeckung und tageweise Wertepaare.
 - **SwiftData** persistiert ausschließlich manuell eingegebene Check-ins.
@@ -138,7 +139,7 @@ Berechtigungs-, Inhalts-, Empty-, Partial- und Fehlerzustände ab. HealthKit
 selbst wird nicht nachgebaut; getestet wird die eigene Logik rund um den
 Client.
 
-Der Stand `0.2.0 (2)` wurde mit 61 Tests beziehungsweise 64 Ausführungen auf
+Der Stand `0.2.0 (2)` wurde mit 62 Tests beziehungsweise 65 Ausführungen auf
 einem iPhone-17-Simulator mit iOS 26.4.1 ohne Fehler verifiziert.
 
 ## Demo und Screenshots

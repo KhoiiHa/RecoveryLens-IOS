@@ -1,6 +1,6 @@
 # Datenschutzerklärung für RecoveryLens
 
-Stand: 29. Juli 2026
+Stand: 4. August 2026
 
 RecoveryLens ist eine lokal arbeitende iPhone-App zur übersichtlichen
 Darstellung ausgewählter Apple-Health-Daten. Die App erstellt keine
@@ -16,15 +16,24 @@ auf folgende Daten aus Apple Health zugreifen:
 - Schlafanalyse
 - Trainingseinheiten
 
-Diese Daten werden nur auf deinem Gerät für die aktuelle Dashboard- und
-Wochenansicht verarbeitet. RecoveryLens kopiert HealthKit-Daten nicht in die
-eigene SwiftData-Datenbank und überträgt sie nicht an den Entwickler oder
-Dritte.
+Diese Daten werden nur auf deinem Gerät für Dashboard, Wochenübersicht und die
+auf höchstens 30 Kalendertage begrenzte Reflexionsansicht verarbeitet.
+Trainingseinheiten werden ausschließlich für die Sieben-Tage-Übersicht
+abgefragt; die 30-Tage-Reflexion liest nur Schritte, aktive Energie und Schlaf.
+RecoveryLens kopiert HealthKit-Daten nicht in die eigene SwiftData-Datenbank
+und überträgt sie nicht an den Entwickler oder Dritte.
 
 Zusätzlich kannst du freiwillig einen täglichen Check-in mit
 Energieempfinden, Stimmung und einer optionalen Notiz speichern. RecoveryLens
 speichert diese Check-ins lokal im geschützten App-Container und betreibt dafür
 keine eigene Übertragung oder Cloud-Synchronisierung.
+
+Die 30-Tage-Reflexion kann vorhandene Schritte, aktive Energie oder Schlafdauer
+dem manuell eingegebenen Energieempfinden desselben Kalendertages
+gegenüberstellen. Diese Zuordnung wird nur auf dem Gerät berechnet, nicht
+gespeichert oder übertragen und nicht als Ursache, Wirkung oder medizinische
+Bewertung interpretiert. Stimmung und Check-in-Notiz werden dafür nicht
+verwendet.
 
 ## Speicherung und Löschung
 
@@ -36,7 +45,10 @@ App-Daten Bestandteil eines verschlüsselten Geräte- oder iCloud-Backups sein.
 RecoveryLens steuert oder betreibt diese Systembackups nicht.
 
 Die Freigabe einzelner HealthKit-Datentypen kannst du jederzeit in Apple Health
-oder den iOS-Systemeinstellungen ändern.
+oder den iOS-Systemeinstellungen ändern. Apple Health kann außerdem anbieten,
+den Lesezugriff auf einen begrenzten historischen Zeitraum zu beschränken.
+RecoveryLens behandelt außerhalb dieses Zeitraums fehlende Werte nicht als
+gemessene Null und leitet daraus keine konkrete Ablehnung ab.
 
 ## Keine Übertragung und kein Tracking
 
