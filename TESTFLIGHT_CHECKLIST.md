@@ -6,15 +6,15 @@ benötigen.
 
 ## Release-Kandidat
 
-- Version: `0.1.0`
-- Build: `1`
+- Version: `0.2.0`
+- Build: `2`
 - Bundle Identifier: `de.KhoiiHa.RecoveryLens`
 - Plattform: iPhone
 - Deployment Target: iOS 26.0
 - Signierung: automatisch
 
 Jeder erneute Upload benötigt eine höhere Build-Nummer. Die Marketing-Version
-bleibt für weitere Builds dieses MVPs bei `0.1.0`.
+bleibt für weitere Builds dieses Umfangs bei `0.2.0`.
 
 ## Lokal verifiziert
 
@@ -26,7 +26,7 @@ bleibt für weitere Builds dieses MVPs bei `0.1.0`.
 - [x] Keine eigene oder nicht ausgenommene Verschlüsselung
 - [x] Reproduzierbare Demo-Daten und Portfolio-Screenshots sind vorhanden
 - [x] Screenshots liegen im akzeptierten 6,9-Zoll-iPhone-Format vor
-- [x] Unit- und UI-Testabdeckung für die MVP-Zustände ist vorhanden
+- [x] 61 Unit- und UI-Tests (64 Ausführungen) sind auf iOS 26.4.1 grün
 - [x] Xcode 26.6 und iOS-26-SDK erfüllen die Upload-Anforderung ab April 2026
 
 Ein unsigniertes Archive belegt nur die lokale Release-Baubarkeit. Es ist kein
@@ -73,16 +73,17 @@ Check-ins werden in diesem MVP ausschließlich auf dem Gerät verarbeitet.
 
 ### Beta-Beschreibung
 
-RecoveryLens bereitet ausgewählte Apple-Health-Daten der letzten sieben Tage
+RecoveryLens bereitet ausgewählte Apple-Health-Daten der letzten 30 Tage
 übersichtlich auf. Die App zeigt Schritte, aktive Energie, Schlafdauer und
-Trainingseinheiten und speichert optionale Tages-Check-ins nur lokal. Sie gibt
-keine medizinischen Diagnosen oder Gesundheitsempfehlungen.
+Trainingseinheiten und stellt vorhandene Tageswerte neutral lokalen Check-ins
+gegenüber. Sie gibt keine medizinischen Diagnosen, Kausalitätsaussagen oder
+Gesundheitsempfehlungen.
 
 ### Was soll getestet werden?
 
 Bitte prüfe den HealthKit-Berechtigungsfluss, fehlende oder teilweise
-vorhandene Daten, die Wochenübersicht sowie das Erstellen und Aktualisieren
-eines Tages-Check-ins. Melde insbesondere unplausible Schlafsummen,
+vorhandene Daten, die Wochen- und 30-Tage-Ansicht sowie das Erstellen und
+Aktualisieren eines Tages-Check-ins. Melde insbesondere unplausible Schlafsummen,
 unvollständige Trainingseinheiten und Darstellungsfehler.
 
 ## Referenzen

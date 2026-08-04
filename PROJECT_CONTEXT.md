@@ -1,6 +1,6 @@
 # RecoveryLens – Projektkontext
 
-Stand: 28. Juli 2026
+Stand: 4. August 2026
 
 ## Produktziel
 
@@ -35,6 +35,18 @@ manuellen Tages-Check-in ergänzen möchten.
 - sichtbarer Hinweis, dass RecoveryLens keine medizinische Bewertung vornimmt
 - explizite Berechtigungs-, Lade-, Inhalts-, Empty- und Fehlerzustände
 
+## Version 0.2
+
+- eigene 30-Tage-Reflexionsansicht, die erst beim Öffnen Daten lädt
+- neutrale Verläufe für Schritte, aktive Energie und Schlaf
+- Median und Datenabdeckung pro ausgewählter Kennzahl
+- Gegenüberstellung vorhandener Tageswerte mit dem manuellen
+  Energieempfinden desselben Tages
+- mindestens fünf passende Wertepaare vor Darstellung der Gegenüberstellung
+- ausdrücklicher Hinweis, dass zeitgleiche Beobachtungen keine Ursache oder
+  Wirkung belegen
+- keine zusätzlichen HealthKit-Datentypen oder Berechtigungen
+
 ## Bewusste Grenzen
 
 RecoveryLens interpretiert Messwerte nicht als „gut“, „schlecht“, „gesund“,
@@ -44,7 +56,7 @@ RecoveryLens interpretiert Messwerte nicht als „gut“, „schlecht“, „ges
 - keine Diagnose oder Risikoeinschätzung
 - keine konkreten Gesundheits-, Schlaf- oder Trainingsempfehlungen
 - keine individuellen Ziele oder Zielerreichungsbewertung
-- keine Langzeittrends über den Sieben-Tage-Zeitraum hinaus
+- keine Trends über den begrenzten 30-Tage-Zeitraum hinaus
 - keinen Export
 - kein Widget und keinen App Intent
 - keine zusätzlichen HealthKit-Werte
@@ -66,8 +78,10 @@ werden vor der Implementierung ausdrücklich vereinbart.
    heutigen Kennzahlen.
 4. Die Wochenansicht zeigt sieben Kalendertage und die zugehörigen
    Trainingseinheiten.
-5. Der Tages-Check-in kann erstellt oder für denselben Tag bearbeitet werden.
-6. Eine Infoansicht dokumentiert Datenschutz, Datenquellen und fachliche
+5. Die 30-Tage-Reflexion zeigt neutrale Verläufe und, bei ausreichender
+   Datenmenge, zeitgleiche Check-in-Werte.
+6. Der Tages-Check-in kann erstellt oder für denselben Tag bearbeitet werden.
+7. Eine Infoansicht dokumentiert Datenschutz, Datenquellen und fachliche
    Grenzen.
 
 Eine abgelehnte Berechtigung blockiert den manuellen Check-in nicht.
@@ -103,6 +117,15 @@ Eine abgelehnte Berechtigung blockiert den manuellen Check-in nicht.
 - optionale kurze Notiz
 - genau ein Eintrag pro lokalem Kalendertag
 - Validierung vor dem Speichern
+
+### 30-Tage-Reflexion
+
+- Auswahl zwischen Schritten, aktiver Energie und Schlaf
+- tägliche Werte mit sichtbarer Datenabdeckung und Median
+- fehlende Werte werden ausgelassen und nicht als Null ergänzt
+- Punktdarstellung aus Tageskennzahl und manuellem Energieempfinden
+- eigener Zustand bei fehlenden oder zu wenigen Wertepaaren
+- sichtbare Abgrenzung von medizinischer Bewertung und Kausalität
 
 ### Info und Datenschutz
 
@@ -199,7 +222,7 @@ beobachtbare Zustände.
 
 ## Datenschutz
 
-- Es werden nur die für MVP 0.1 genannten HealthKit-Typen angefragt.
+- Es werden nur die für Version 0.2 genannten HealthKit-Typen angefragt.
 - HealthKit-Daten werden ausschließlich gelesen und für die aktuelle
   Darstellung verarbeitet.
 - HealthKit-Daten werden nicht in SwiftData gespiegelt.
@@ -239,6 +262,9 @@ Zustandsübergänge:
 
 - Mapping von Client-Ergebnissen auf Dashboard-Daten
 - Aggregation der letzten sieben Kalendertage
+- Aggregation der letzten 30 Kalendertage mit Schlafkontext
+- Median, Datenabdeckung und tageweise Check-in-Zuordnung
+- Mindestmenge für die Gegenüberstellung von Health- und Check-in-Werten
 - Schlafaggregation ohne doppelte Überlappungen
 - fehlende und partiell fehlende Daten
 - nicht verfügbares HealthKit, Berechtigungsfluss und Abfragefehler
@@ -252,7 +278,7 @@ oder einer dokumentierten manuellen Verifikation.
 
 ## Portfolio-Abschlusskriterien
 
-MVP 0.1 ist erst abgeschlossen, wenn:
+Version 0.2 ist erst abgeschlossen, wenn:
 
 - App und Tests lokal erfolgreich bauen
 - alle relevanten Unit- und UI-Tests grün sind
@@ -282,8 +308,12 @@ Commit:
 9. Demo-Screenshots, App Icon, README und Case Study
 10. Abschlussprüfung auf Simulator und realem Gerät
 11. Release-Metadaten und TestFlight-Checkliste
+12. Zeitraumzugriff für lokale Check-ins
+13. neutrale Trend- und Vergleichslogik
+14. 30-Tage-ViewModel und Reflexionsansicht
+15. Version-0.2-Dokumentation und Portfolio-Aufnahmen
 
-Die MVP-Marketing-Version ist `0.1.0`. Jeder Upload verwendet eine eindeutige,
+Die aktuelle Marketing-Version ist `0.2.0`. Jeder Upload verwendet eine eindeutige,
 aufsteigende Build-Nummer. Der aktuelle Release-Stand und alle Schritte, die
 ein Developer-Konto oder physisches iPhone voraussetzen, werden in
 `TESTFLIGHT_CHECKLIST.md` geführt.

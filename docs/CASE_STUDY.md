@@ -11,13 +11,14 @@ abzuleiten.
 
 ## Ziel und Umfang
 
-MVP 0.1 konzentriert sich auf vier gelesene HealthKit-Datentypen: Schritte,
+Version 0.2 konzentriert sich weiterhin auf vier gelesene HealthKit-Datentypen: Schritte,
 aktive Energie, Schlafanalyse und Trainingseinheiten. Das Dashboard zeigt
 heutige Werte, die Wochenansicht genau sieben Kalendertage. Ein optionaler
 Check-in ergänzt Energieempfinden, Stimmung und eine kurze Notiz als eigene
-lokale App-Daten.
+lokale App-Daten. Eine getrennt geladene 30-Tage-Ansicht ergänzt neutrale
+Verläufe, Median und Datenabdeckung.
 
-Bewusst ausgeschlossen sind Recovery-Scores, Ziele, Langzeittrends, Export,
+Bewusst ausgeschlossen sind Recovery-Scores, Ziele, Trends über 30 Tage, Export,
 WidgetKit, App Intents und zusätzliche HealthKit-Werte. Diese Begrenzung hält
 Datennutzung, Testumfang und Produktaussage nachvollziehbar.
 
@@ -72,6 +73,18 @@ SwiftData speichert ausschließlich manuelle Check-ins. Pro lokalem
 Kalendertag existiert höchstens ein Eintrag; erneutes Speichern aktualisiert
 diesen Eintrag.
 
+### Beobachtungen ohne Gesundheitsurteil
+
+Die 30-Tage-Reflexion verbindet vorhandene Tageskennzahlen mit dem manuellen
+Energieempfinden desselben Tages. RecoveryLens berechnet daraus weder Score
+noch Korrelation oder Empfehlung. Erst ab fünf passenden Wertepaaren wird die
+Punktdarstellung gezeigt; sie wird ausdrücklich als zeitgleiche Beobachtung
+ohne Ursache-Wirkungs-Aussage gekennzeichnet.
+
+HealthKit-Daten werden dafür weiterhin nicht persistiert. Die längere Abfrage
+wird erst beim Öffnen der Ansicht ausgeführt und bleibt auf 30 Kalendertage
+plus den erforderlichen Schlafkontext begrenzt.
+
 ## Datenschutz und Produktgrenzen
 
 RecoveryLens besitzt kein Konto, keine Cloud-Synchronisierung, keine
@@ -93,7 +106,8 @@ der Infoansicht sichtbar, statt nur in Repository-Dokumentation zu stehen.
 ## Teststrategie
 
 HealthKit selbst wird nicht nachgebaut. Unit-Tests prüfen die eigene
-Aggregation, Schlafüberlappungen, fehlende Daten, Check-in-Validierung,
+Aggregation, Schlafüberlappungen, fehlende Daten, Median, Wertepaare,
+Mindestmengen, Check-in-Validierung,
 SwiftData-Speicherung und ViewModel-Zustände. UI-Tests starten die App über
 deterministische DEBUG-Szenarien und prüfen Berechtigung, Laden, Inhalt,
 Empty-, Partial- und Fehlerdarstellung.
@@ -104,7 +118,7 @@ Health-Daten reproduzieren.
 
 ## Ergebnis
 
-Das MVP demonstriert HealthKit, Swift Charts, SwiftData, async/await und
+Version 0.2 demonstriert HealthKit, Swift Charts, SwiftData, async/await und
 MVVM, ohne eine unnötig breite Architektur einzuführen. Die wichtigsten
 Portfolio-Artefakte sind im Repository nachvollziehbar: Quellcode, Tests,
 synthetische Demo-Daten, Screenshot-Automation, App Icon sowie dokumentierte

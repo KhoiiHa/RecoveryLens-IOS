@@ -1,7 +1,7 @@
 # RecoveryLens
 
 RecoveryLens ist ein bewusst begrenztes SwiftUI-Portfolio-Projekt, das
-ausgewählte Apple-Health-Daten der letzten sieben Tage übersichtlich
+ausgewählte Apple-Health-Daten der letzten 30 Tage übersichtlich
 aufbereitet. Die App unterstützt persönliche Reflexion, erstellt aber keine
 Diagnosen, Risikoeinschätzungen oder konkreten Gesundheitsempfehlungen.
 
@@ -10,8 +10,10 @@ Diagnosen, Risikoeinschätzungen oder konkreten Gesundheitsempfehlungen.
 | Freiwillige HealthKit-Freigabe | Dashboard |
 | --- | --- |
 | ![Berechtigungsfluss mit gelesenen HealthKit-Datentypen](docs/screenshots/00-authorization.png) | ![Dashboard mit synthetischen Tageswerten](docs/screenshots/01-dashboard.png) |
-| Wochenübersicht | Tages-Check-in |
-| ![Wochenchart und Trainingseinheiten](docs/screenshots/02-week-overview.png) | ![Lokaler Tages-Check-in](docs/screenshots/03-check-in.png) |
+| Wochenübersicht | 30-Tage-Reflexion |
+| ![Wochenchart und Trainingseinheiten](docs/screenshots/02-week-overview.png) | ![30-Tage-Verlauf und Check-in-Gegenüberstellung](docs/screenshots/03-thirty-day-reflection.png) |
+| Tages-Check-in | |
+| ![Lokaler Tages-Check-in](docs/screenshots/04-check-in.png) | |
 
 Alle Aufnahmen verwenden reproduzierbare, synthetische Demo-Daten. Es werden
 keine persönlichen HealthKit-Daten im Repository gespeichert.
@@ -28,6 +30,14 @@ keine persönlichen HealthKit-Daten im Repository gespeichert.
 - deterministische Mock-Daten für Tests, Previews und Screenshots
 - bewusst auf iPhone begrenztes MVP
 
+## Version 0.2
+
+- neutrale 30-Tage-Verläufe für Schritte, aktive Energie und Schlaf
+- Median und transparente Datenabdeckung ohne Zielbewertung
+- tageweise Gegenüberstellung mit dem manuellen Energieempfinden
+- mindestens fünf passende Wertepaare vor der Vergleichsdarstellung
+- keine Kausalitätsaussage, medizinische Bewertung oder neuen Berechtigungen
+
 ## Architektur
 
 Die App verwendet eine kleine MVVM-Struktur ohne Drittanbieter-Abhängigkeiten:
@@ -36,6 +46,7 @@ Die App verwendet eine kleine MVVM-Struktur ohne Drittanbieter-Abhängigkeiten:
 - **ViewModels** koordinieren Autorisierung, Laden und Präsentationszustände.
 - **HealthKitClient** kapselt HealthKit hinter einem testbaren Protokoll.
 - **HealthSummaryAggregator** bündelt reine Kalender- und Aggregationslogik.
+- **TrendContent** berechnet Median, Abdeckung und tageweise Wertepaare.
 - **SwiftData** persistiert ausschließlich manuell eingegebene Check-ins.
 - **DemoData** und **MockHealthKitClient** liefern deterministische Szenarien.
 
@@ -74,8 +85,9 @@ Veröffentlichung persönlicher Gesundheitsdaten gestellt werden.
 RecoveryLens bewertet Werte nicht als gut, schlecht, gesund, erholt oder
 überlastet. Es gibt keinen Recovery- oder Readiness-Score, keine Diagnose,
 keine Risikoeinschätzung und keine konkrete Schlaf-, Trainings- oder
-Gesundheitsempfehlung. Der betrachtete Zeitraum endet nach sieben
-Kalendertagen einschließlich heute.
+Gesundheitsempfehlung. Der längste betrachtete Zeitraum endet nach 30
+Kalendertagen einschließlich heute. Die Gegenüberstellung mit Check-ins zeigt
+nur zeitgleiche Beobachtungen und belegt keine Ursache oder Wirkung.
 
 Für die Schlafdauer zählen ausschließlich die von HealthKit als Schlaf
 klassifizierten Zustände. Bett- und Wachzeiten werden nicht als Schlaf
@@ -116,14 +128,18 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 xcodebuild test \
   -project RecoveryLens/RecoveryLens.xcodeproj \
   -scheme RecoveryLens \
-  -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5'
+  -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.4.1'
 ```
 
-Die Unit-Tests prüfen Aggregation, fehlende Daten, ViewModel-Zustände sowie
+Die Unit-Tests prüfen Aggregation, fehlende Daten, Median, tageweise
+Check-in-Zuordnung, Mindestmengen, ViewModel-Zustände sowie
 Check-in-Validierung und -Speicherung. UI-Tests decken die zentralen
 Berechtigungs-, Inhalts-, Empty-, Partial- und Fehlerzustände ab. HealthKit
 selbst wird nicht nachgebaut; getestet wird die eigene Logik rund um den
 Client.
+
+Der Stand `0.2.0 (2)` wurde mit 61 Tests beziehungsweise 64 Ausführungen auf
+einem iPhone-17-Simulator mit iOS 26.4.1 ohne Fehler verifiziert.
 
 ## Demo und Screenshots
 
@@ -132,7 +148,7 @@ gesetzt werden. Weitere DEBUG-Szenarien sind unter anderem `-emptyData`,
 `-partialData`, `-queryError`, `-authorizationRequired` und
 `-healthKitUnavailable`.
 
-Die vier README-Screenshots werden mit einem fokussierten UI-Test erzeugt:
+Die fünf README-Screenshots werden mit einem fokussierten UI-Test erzeugt:
 
 ```bash
 ./scripts/capture_portfolio_screenshots.sh
@@ -150,7 +166,7 @@ Die Standardausgabe verwendet das von App Store Connect akzeptierte
 
 ## Projektstatus
 
-MVP `0.1.0 (1)` ist funktional umgesetzt und auf Simulatorbasis automatisiert
+Version `0.2.0 (2)` ist funktional umgesetzt und auf Simulatorbasis automatisiert
 geprüft. Ein unsigniertes Release-Archive baut lokal erfolgreich. Die
 abschließende Verifikation des Live-HealthKit-Flows auf einem realen Gerät,
 Signierung und Upload sind weiterhin offene Release-Schritte. Der verifizierte
