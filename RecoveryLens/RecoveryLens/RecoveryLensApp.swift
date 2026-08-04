@@ -95,9 +95,18 @@ struct RecoveryLensApp: App {
     private func debugRootView(
         for scenario: DebugHealthScenario
     ) -> ContentView {
-        ContentView(
+        let scenarioCheckInService: any CheckInService
+        if scenario.usesDemoCheckIns, modelContainer != nil {
+            scenarioCheckInService = DebugDemoCheckInService(
+                base: checkInService
+            )
+        } else {
+            scenarioCheckInService = checkInService
+        }
+
+        return ContentView(
             healthKitClient: scenario.healthKitClient,
-            checkInService: checkInService,
+            checkInService: scenarioCheckInService,
             calendar: DemoData.calendar,
             now: { DemoData.referenceDate }
         )
@@ -181,6 +190,12 @@ private enum DebugHealthScenario {
     var usesPortfolioAppearance: Bool {
         self == .portfolioAuthorization || self == .portfolioScreenshots
     }
+
+    var usesDemoCheckIns: Bool {
+        self == .demoData
+            || self == .portfolioScreenshots
+            || self == .accessibilityText
+    }
 }
 
 private struct DebugLoadingHealthKitClient: HealthKitClient {
@@ -196,6 +211,41 @@ private struct DebugLoadingHealthKitClient: HealthKitClient {
         to endDate: Date
     ) async throws -> HealthDataSnapshot {
         .empty
+    }
+
+}
+
+@MainActor
+private final class DebugDemoCheckInService: CheckInService {
+    private let base: any CheckInService
+
+    init(base: any CheckInService) {
+        self.base = base
+    }
+
+    func checkIn(for date: Date) throws -> DailyCheckIn? {
+        try base.checkIn(for: date)
+    }
+
+    func checkInSummaries(from startDate: Date, to endDate: Date) throws
+        -> [DailyCheckInSummary] {
+        DemoData.checkInSummaries.filter {
+            $0.date >= startDate && $0.date < endDate
+        }
+    }
+
+    func save(
+        date: Date,
+        energyLevel: Int,
+        moodLevel: Int,
+        note: String?
+    ) throws -> DailyCheckIn {
+        try base.save(
+            date: date,
+            energyLevel: energyLevel,
+            moodLevel: moodLevel,
+            note: note
+        )
     }
 }
 #endif

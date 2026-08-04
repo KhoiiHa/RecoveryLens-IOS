@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DashboardView: View {
     let content: DashboardContent
+    @Bindable var trendsViewModel: TrendsViewModel
     let showsMissingDataNotice: Bool
     let isRefreshing: Bool
     let onRefresh: () async -> Void
@@ -19,6 +20,7 @@ struct DashboardView: View {
 
                 todaySection
                 weekSection
+                trendsSection
                 medicalNotice
             }
             .padding(.horizontal, 16)
@@ -193,6 +195,46 @@ struct DashboardView: View {
         }
     }
 
+    private var trendsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Reflexion")
+                .font(.headline)
+
+            NavigationLink {
+                TrendsView(viewModel: trendsViewModel)
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "chart.xyaxis.line")
+                        .font(.title3)
+                        .foregroundStyle(.teal)
+                        .frame(width: 32)
+                        .accessibilityHidden(true)
+
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("30-Tage-Reflexion")
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+
+                        Text("Trends und Check-ins")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.tertiary)
+                        .accessibilityHidden(true)
+                }
+                .padding(14)
+                .background(Color(.secondarySystemGroupedBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
     private var medicalNotice: some View {
         Label {
             Text(
@@ -315,6 +357,14 @@ private struct MetricCard: View {
                 content: DashboardContent(
                     today: today,
                     week: DemoData.summaries
+                ),
+                trendsViewModel: TrendsViewModel(
+                    healthKitClient: MockHealthKitClient(
+                        snapshotResult: .success(DemoData.snapshot)
+                    ),
+                    checkInService: PreviewCheckInService(),
+                    calendar: DemoData.calendar,
+                    now: { DemoData.referenceDate }
                 ),
                 showsMissingDataNotice: false,
                 isRefreshing: false,

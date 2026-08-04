@@ -4,6 +4,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var dashboardViewModel: DashboardViewModel
     @State private var checkInViewModel: CheckInViewModel
+    @State private var trendsViewModel: TrendsViewModel
     @Environment(\.scenePhase) private var scenePhase
 
     private let now: () -> Date
@@ -27,6 +28,14 @@ struct ContentView: View {
                 checkInService: checkInService,
                 date: now(),
                 calendar: calendar
+            )
+        )
+        _trendsViewModel = State(
+            initialValue: TrendsViewModel(
+                healthKitClient: healthKitClient,
+                checkInService: checkInService,
+                calendar: calendar,
+                now: now
             )
         )
     }
@@ -118,6 +127,7 @@ struct ContentView: View {
         case let .partial(content):
             DashboardView(
                 content: content,
+                trendsViewModel: trendsViewModel,
                 showsMissingDataNotice: true,
                 isRefreshing: dashboardViewModel.isRefreshing,
                 onRefresh: dashboardViewModel.refresh
@@ -125,6 +135,7 @@ struct ContentView: View {
         case let .loaded(content):
             DashboardView(
                 content: content,
+                trendsViewModel: trendsViewModel,
                 showsMissingDataNotice: false,
                 isRefreshing: dashboardViewModel.isRefreshing,
                 onRefresh: dashboardViewModel.refresh

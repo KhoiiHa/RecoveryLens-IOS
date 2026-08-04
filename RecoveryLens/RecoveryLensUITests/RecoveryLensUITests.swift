@@ -137,6 +137,37 @@ final class RecoveryLensUITests: XCTestCase {
         XCTAssertTrue(
             app.buttons["Letzte sieben Tage, 3 Trainingseinheiten"].exists
         )
+        XCTAssertTrue(
+            app.buttons["30-Tage-Reflexion, Trends und Check-ins"].exists
+        )
+    }
+
+    @MainActor
+    func testDemoDataShowsThirtyDayReflection() {
+        let app = launch(with: "-demoData")
+        let trendsButton = app.buttons[
+            "30-Tage-Reflexion, Trends und Check-ins"
+        ]
+        scrollUntilHittable(trendsButton, in: app)
+        trendsButton.tap()
+
+        XCTAssertTrue(
+            app.navigationBars["30-Tage-Reflexion"]
+                .waitForExistence(timeout: 3)
+        )
+        let coverage = app.staticTexts["trend-data-coverage"]
+        XCTAssertTrue(coverage.exists)
+        XCTAssertTrue(coverage.label.contains("30 von 30 Tagen"))
+
+        let comparisonTitle = app.staticTexts["Mit Energieempfinden"]
+        scrollUntilHittable(comparisonTitle, in: app)
+        XCTAssertTrue(comparisonTitle.isHittable)
+
+        let boundaryText = app.staticTexts[
+            "Die Darstellung zeigt nur zeitgleiche Beobachtungen. Sie belegt keine Ursache oder Wirkung."
+        ]
+        scrollUntilHittable(boundaryText, in: app)
+        XCTAssertTrue(boundaryText.isHittable)
     }
 
     @MainActor
@@ -163,6 +194,18 @@ final class RecoveryLensUITests: XCTestCase {
         )
         addScreenshot(named: "02-week-overview", from: app)
 
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        let trendsButton = app.buttons[
+            "30-Tage-Reflexion, Trends und Check-ins"
+        ]
+        scrollUntilHittable(trendsButton, in: app)
+        trendsButton.tap()
+        XCTAssertTrue(
+            app.navigationBars["30-Tage-Reflexion"]
+                .waitForExistence(timeout: 3)
+        )
+        addScreenshot(named: "03-thirty-day-reflection", from: app)
+
         app.tabBars.buttons["Check-in"].tap()
         XCTAssertTrue(
             app.navigationBars["Tages-Check-in"]
@@ -172,7 +215,7 @@ final class RecoveryLensUITests: XCTestCase {
             app.staticTexts["Wie fühlst du dich heute?"]
                 .waitForExistence(timeout: 3)
         )
-        addScreenshot(named: "03-check-in", from: app)
+        addScreenshot(named: "04-check-in", from: app)
     }
 
     @MainActor
