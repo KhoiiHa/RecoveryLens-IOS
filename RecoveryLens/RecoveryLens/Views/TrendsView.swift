@@ -213,13 +213,12 @@ private struct TrendContentView: View {
                 .frame(height: 240)
             }
 
-            HStack {
+            VStack(alignment: .leading, spacing: 4) {
                 Label(
                     "\(trendPoints.count) von \(content.days.count) Tagen",
                     systemImage: "calendar"
                 )
                 .accessibilityIdentifier("trend-data-coverage")
-                Spacer()
                 if let median {
                     Text("Median: \(formattedShortValue(median))")
                 }
@@ -397,6 +396,7 @@ private struct TrendContentView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         TrendsView(
@@ -411,3 +411,4 @@ private struct TrendContentView: View {
         )
     }
 }
+#endif

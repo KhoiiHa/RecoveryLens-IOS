@@ -60,7 +60,7 @@ struct TrendsViewModelTests {
         let expectedEnd = try date(dayOffset: 1)
 
         #expect(content.days.count == 30)
-        #expect(content.points(for: .steps).count == 7)
+        #expect(content.points(for: .steps).count == 30)
         #expect(healthRange.start == expectedHealthStart)
         #expect(healthRange.end == expectedEnd)
         #expect(checkInRange.start == expectedFirstDay)
@@ -154,11 +154,11 @@ private final class TrendsHealthKitSpy: HealthKitClient {
 
     init(
         authorizationState: HealthKitAuthorizationState = .requestNotNeeded,
-        snapshot: HealthDataSnapshot = .empty,
+        snapshot: HealthDataSnapshot? = nil,
         snapshotError: HealthKitClientError? = nil
     ) {
         self.authorizationStateValue = authorizationState
-        self.snapshot = snapshot
+        self.snapshot = snapshot ?? .empty
         self.snapshotError = snapshotError
     }
 

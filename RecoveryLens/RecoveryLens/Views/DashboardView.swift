@@ -350,6 +350,7 @@ private struct MetricCard: View {
     }
 }
 
+#if DEBUG
 #Preview {
     if let today = DemoData.summaries.last {
         NavigationStack {
@@ -373,3 +374,4 @@ private struct MetricCard: View {
         }
     }
 }
+#endif
