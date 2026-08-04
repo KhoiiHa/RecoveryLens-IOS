@@ -87,6 +87,73 @@ struct CheckInServiceTests {
     }
 
     @Test
+    func checkInSummariesReturnOnlyRequestedDaysInOrder() throws {
+        let container = try makeContainer()
+        let service = makeService(container: container)
+        let olderDate = try #require(
+            DemoData.calendar.date(
+                byAdding: .day,
+                value: -3,
+                to: DemoData.referenceDate
+            )
+        )
+        let includedDate = try #require(
+            DemoData.calendar.date(
+                byAdding: .day,
+                value: -1,
+                to: DemoData.referenceDate
+            )
+        )
+        let rangeEnd = try #require(
+            DemoData.calendar.date(
+                byAdding: .day,
+                value: 1,
+                to: DemoData.calendar.startOfDay(for: DemoData.referenceDate)
+            )
+        )
+
+        insertCheckIn(
+            date: DemoData.referenceDate,
+            energyLevel: 4,
+            moodLevel: 5,
+            into: container.mainContext
+        )
+        insertCheckIn(
+            date: olderDate,
+            energyLevel: 2,
+            moodLevel: 3,
+            into: container.mainContext
+        )
+        insertCheckIn(
+            date: includedDate,
+            energyLevel: 3,
+            moodLevel: 4,
+            into: container.mainContext
+        )
+        try container.mainContext.save()
+
+        let summaries = try service.checkInSummaries(
+            from: includedDate,
+            to: rangeEnd
+        )
+
+        #expect(summaries == [
+            DailyCheckInSummary(
+                date: DemoData.calendar.startOfDay(for: includedDate),
+                energyLevel: 3,
+                moodLevel: 4
+            ),
+            DailyCheckInSummary(
+                date: DemoData.calendar.startOfDay(
+                    for: DemoData.referenceDate
+                ),
+                energyLevel: 4,
+                moodLevel: 5
+            ),
+        ])
+    }
+
+    @Test
     func saveValidatesRatingsAndNoteLength() throws {
         let service = makeService(container: try makeContainer())
 
@@ -138,6 +205,25 @@ struct CheckInServiceTests {
             modelContext: container.mainContext,
             calendar: DemoData.calendar,
             now: { DemoData.referenceDate }
+        )
+    }
+
+    private func insertCheckIn(
+        date: Date,
+        energyLevel: Int,
+        moodLevel: Int,
+        into context: ModelContext
+    ) {
+        let day = DemoData.calendar.startOfDay(for: date)
+        context.insert(
+            DailyCheckIn(
+                date: day,
+                energyLevel: energyLevel,
+                moodLevel: moodLevel,
+                note: nil,
+                createdAt: DemoData.referenceDate,
+                updatedAt: DemoData.referenceDate
+            )
         )
     }
 }

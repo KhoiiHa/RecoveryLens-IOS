@@ -29,6 +29,8 @@ enum CheckInServiceError: Error, Equatable, LocalizedError {
 @MainActor
 protocol CheckInService {
     func checkIn(for date: Date) throws -> DailyCheckIn?
+    func checkInSummaries(from startDate: Date, to endDate: Date) throws
+        -> [DailyCheckInSummary]
 
     @discardableResult
     func save(
@@ -39,9 +41,21 @@ protocol CheckInService {
     ) throws -> DailyCheckIn
 }
 
+extension CheckInService {
+    func checkInSummaries(from startDate: Date, to endDate: Date) throws
+        -> [DailyCheckInSummary] {
+        []
+    }
+}
+
 @MainActor
 struct UnavailableCheckInService: CheckInService {
     func checkIn(for date: Date) throws -> DailyCheckIn? {
+        throw CheckInServiceError.persistenceUnavailable
+    }
+
+    func checkInSummaries(from startDate: Date, to endDate: Date) throws
+        -> [DailyCheckInSummary] {
         throw CheckInServiceError.persistenceUnavailable
     }
 
@@ -90,6 +104,31 @@ final class SwiftDataCheckInService: CheckInService {
         )
         descriptor.fetchLimit = 1
         return try modelContext.fetch(descriptor).first
+    }
+
+    func checkInSummaries(
+        from startDate: Date,
+        to endDate: Date
+    ) throws -> [DailyCheckInSummary] {
+        guard startDate < endDate else {
+            return []
+        }
+
+        let rangeStart = calendar.startOfDay(for: startDate)
+        let descriptor = FetchDescriptor<DailyCheckIn>(
+            predicate: #Predicate {
+                $0.date >= rangeStart && $0.date < endDate
+            },
+            sortBy: [SortDescriptor(\.date)]
+        )
+
+        return try modelContext.fetch(descriptor).map {
+            DailyCheckInSummary(
+                date: $0.date,
+                energyLevel: $0.energyLevel,
+                moodLevel: $0.moodLevel
+            )
+        }
     }
 
     func save(
